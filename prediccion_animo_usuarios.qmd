@@ -1,0 +1,153 @@
+---
+title: "Predicción del Ánimo de Usuarios"
+code-fold: false
+---
+
+# Importación de librerías
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.utils import resample
+import nltk
+import re
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+# Descargar recursos necesarios
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+```
+
+# 1. Carga y exploración de datos
+```{python}
+# 1. Carga y creación de sentiment_class
+url = "https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/tweets_totales_con_sentimiento_ml.csv"
+df = pd.read_csv(url)
+
+# Eliminar filas nulas en columnas críticas
+df = df.dropna(subset=['content', 'sentiment_polarity', 'createdAt'])
+
+# Crear columna categórica sentiment_class
+def categorize_sentiment(polarity):
+    if polarity > 0:
+        return 'positivo'
+    elif polarity < 0:
+        return 'negativo'
+    else:
+        return 'neutro'
+
+df['sentiment_class'] = df['sentiment_polarity'].apply(categorize_sentiment)
+
+# Mantener solo las columnas necesarias
+df = df[['content', 'sentiment_class', 'createdAt']]
+df.head()
+```
+
+# 2. Balanceo de clases
+```{python}
+# Ver distribución original
+print("Distribución original:")
+print(df['sentiment_class'].value_counts())
+
+# Balanceo mediante sobremuestreo (oversampling)
+min_class = df['sentiment_class'].value_counts().min()
+balanced_df = pd.concat([
+    resample(df[df['sentiment_class'] == c], 
+             replace=True, 
+             n_samples=min_class, 
+             random_state=42)
+    for c in df['sentiment_class'].unique()
+])
+
+print("\nDistribución balanceada:")
+print(balanced_df['sentiment_class'].value_counts())
+
+sns.countplot(x='sentiment_class', data=balanced_df, palette=['green', 'red', 'gray'])
+plt.title('Distribución Balanceada de Clases')
+plt.show()
+```
+
+# 3. Limpieza y Lemmatization del texto
+```{python}
+stop_words = stopwords.words('spanish')
+lemmatizer = WordNetLemmatizer()
+
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+    text = re.sub(r'\W', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    tokens = text.split()
+    tokens = [lemmatizer.lemmatize(w) for w in tokens if w not in stop_words]
+    return ' '.join(tokens)
+
+balanced_df['content_clean'] = balanced_df['content'].apply(clean_text)
+balanced_df[['content_clean', 'sentiment_class']].head()
+```
+
+# 4. División del conjunto de datos
+```{python}
+X = balanced_df['content_clean']
+y = balanced_df['sentiment_class']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+```
+
+# 5. Creación y entrenamiento del modelo
+```{python}
+# Vectorización TF-IDF + Clasificador
+model = Pipeline([
+    ('tfidf', TfidfVectorizer(max_features=5000, ngram_range=(1,2))),
+    ('clf', LogisticRegression(max_iter=500, solver='lbfgs'))
+])
+
+model.fit(X_train, y_train)
+```
+
+# 6. Evaluación del modelo
+```{python}
+y_pred = model.predict(X_test)
+
+print("=== Clasification Report ===")
+print(classification_report(y_test, y_pred))
+
+cm = confusion_matrix(y_test, y_pred, labels=['positivo', 'negativo', 'neutro'])
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['positivo', 'negativo', 'neutro'],
+            yticklabels=['positivo', 'negativo', 'neutro'])
+plt.xlabel('Predicción')
+plt.ylabel('Valor real')
+plt.title('Matriz de Confusión')
+plt.show()
+```
+
+# 7. Evolución temporal del ánimo
+```{python}
+# Convertir fecha
+balanced_df['createdAt'] = pd.to_datetime(balanced_df['createdAt'], errors='coerce')
+balanced_df = balanced_df.dropna(subset=['createdAt'])
+balanced_df['date'] = balanced_df['createdAt'].dt.date
+
+# Agrupar por día y sentimiento
+trend = balanced_df.groupby(['date', 'sentiment_class']).size().unstack(fill_value=0)
+trend_norm = trend.div(trend.sum(axis=1), axis=0)
+
+# Graficar evolución
+trend_norm.plot(figsize=(14,6))
+plt.title('Evolución del Ánimo de los Usuarios a lo Largo del Tiempo')
+plt.xlabel('Fecha')
+plt.ylabel('Proporción de Tweets')
+plt.legend(title='Sentimiento')
+plt.show()
+```

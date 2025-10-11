@@ -52,8 +52,14 @@ def categorize_sentiment(polarity):
 
 df['sentiment_class'] = df['sentiment_polarity'].apply(categorize_sentiment)
 
-# Revisar distribución de clases
-df['sentiment_class'].value_counts(normalize=True)
+df['sentiment_class'].value_counts(normalize=True).plot(
+    kind='bar',
+    color=['green', 'red', 'gray'],
+    title='Distribución original de clases'
+)
+plt.show()
+# revision de distrubucion de clase
+df['sentiment_class'].value_counts()
 ```
 
 # Exploración y limpieza de datos
@@ -73,33 +79,33 @@ df.head()
 # Codificacion de variables categóricas
 ```{python}
 # Si existen variables categóricas
-#categorical_features = ['sentiment_class'] if 'sentiment_class' in df.columns else []
-#categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+categorical_features = ['sentiment_class'] if 'sentiment_class' in df.columns else []
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
 
 ```
 
 # vectorizacion de texto
 ```{python}
-import re
-from sklearn.feature_extraction.text import TfidfVectorizer
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords
-
-stop_words = stopwords.words('english')
-
-def clean_text(text):
-    text = text.lower()
-    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
-    text = re.sub(r'\W', ' ', text)
-    text = re.sub(r'\s+', ' ', text)
-    return text
-
-df['content_clean'] = df['content'].apply(clean_text)
-
-# Vectorizador
-text_features = 'content_clean'
-text_transformer = TfidfVectorizer(stop_words=stop_words, max_features=5000)
+#import re
+#from sklearn.feature_extraction.text import TfidfVectorizer
+#import nltk
+#nltk.download('stopwords')
+#from nltk.corpus import stopwords
+#
+#stop_words = stopwords.words('english')
+#
+#def clean_text(text):
+#    text = text.lower()
+#    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+#    text = re.sub(r'\W', ' ', text)
+#    text = re.sub(r'\s+', ' ', text)
+#    return text
+#
+#df['content_clean'] = df['content'].apply(clean_text)
+#
+## Vectorizador
+#text_features = 'content_clean'
+#text_transformer = TfidfVectorizer(stop_words=stop_words, max_features=5000)
 
 ```
 
