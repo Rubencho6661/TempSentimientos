@@ -1,0 +1,173 @@
+---
+title: "Laboratorio 2"
+code-fold: false
+---
+
+# Importando librerías
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, LabelEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.metrics import classification_report,ConfusionMatrixDisplay
+```
+
+# 1. Configuración inicial y carga de datos
+
+```{python}
+# Cargar dataset desde GitHub
+url = "https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/tweets_totales_con_sentimiento_ml.csv"
+df = pd.read_csv(url)
+
+# Revisar primeras filas
+df.head()
+```
+
+```{python}
+# Información general del dataset
+df.info()
+df.describe(include='all')
+
+```
+# Creación de la variable target: sentiment_class
+
+```{python}
+# Eliminar filas nulas en columnas críticas
+df = df.dropna(subset=['content', 'sentiment_polarity', 'createdAt'])
+
+# Crear columna categórica
+def categorize_sentiment(polarity):
+    if polarity > 0:
+        return 'positivo'
+    elif polarity < 0:
+        return 'negativo'
+    else:
+        return 'neutro'
+
+df['sentiment_class'] = df['sentiment_polarity'].apply(categorize_sentiment)
+
+# Revisar distribución de clases
+df['sentiment_class'].value_counts(normalize=True)
+```
+
+# Exploración y limpieza de datos
+```{python}
+columns_to_drop = ['tweetId', 'tweetUrl', 'authorId', 'sentiment_polarity']
+df = df.drop(columns=columns_to_drop, errors='ignore')
+
+# Convertir createdAt a datetime
+df['createdAt'] = pd.to_datetime(df['createdAt'], errors='coerce')
+
+# Eliminar filas con fechas inválidas
+df = df.dropna(subset=['createdAt'])
+
+df.head()
+```
+
+# Codificacion de variables categóricas
+```{python}
+# Si existen variables categóricas
+#categorical_features = ['sentiment_class'] if 'sentiment_class' in df.columns else []
+#categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+
+```
+
+# vectorizacion de texto
+```{python}
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+
+stop_words = stopwords.words('english')
+
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r"http\S+|www\S+|https\S+", '', text)
+    text = re.sub(r'\W', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text
+
+df['content_clean'] = df['content'].apply(clean_text)
+
+# Vectorizador
+text_features = 'content_clean'
+text_transformer = TfidfVectorizer(stop_words=stop_words, max_features=5000)
+
+```
+
+# Creación de pipeline de preprocesamiento
+```{python}
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', categorical_transformer, categorical_features),
+        ('text', text_transformer, text_features)
+    ])
+
+```
+
+# Preparación de datos para clasificación
+```{python}
+from sklearn.model_selection import train_test_split
+
+target = 'sentiment_class'
+X = df.drop(columns=[target, 'createdAt', 'content'])
+y = df[target]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+```
+
+# Entrenamiento del modelo
+```{python}
+from sklearn.linear_model import LogisticRegression
+
+model = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression(max_iter=500))
+])
+
+model.fit(X_train, y_train)
+```
+
+# Evaluación del modelo
+```{python}
+from sklearn.metrics import classification_report, confusion_matrix
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))
+```
+
+```{python}
+# Matriz de confusión
+cm = confusion_matrix(y_test, y_pred, labels=['positivo', 'negativo', 'neutro'])
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['positivo', 'negativo', 'neutro'], yticklabels=['positivo', 'negativo', 'neutro'])
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Matriz de Confusión')
+plt.show()
+
+```
+# Análisis de Tendencias a lo Largo del Tiempo
+```{python}
+# Crear columna con fecha sin hora
+df['date'] = df['createdAt'].dt.date
+
+# Contar cantidad de tweets por sentimiento por día
+trend = df.groupby(['date', 'sentiment_class']).size().unstack(fill_value=0)
+
+# Normalizar por total de tweets diarios (opcional)
+trend_norm = trend.div(trend.sum(axis=1), axis=0)
+
+trend_norm.plot(figsize=(14,6))
+plt.title('Evolución de los Sentimientos a lo Largo del Tiempo')
+plt.xlabel('Fecha')
+plt.ylabel('Proporción de Tweets')
+plt.legend(title='Sentimiento')
+plt.show()
+```
