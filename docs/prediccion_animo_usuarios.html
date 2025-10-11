@@ -295,7 +295,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="importación-de-librerías" class="level1">
 <h1>Importación de librerías</h1>
-<div id="b9a9b891" class="cell" data-execution_count="1">
+<div id="49cc6fdd" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -316,6 +318,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'omw-1.4'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to
 [nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
@@ -334,7 +337,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="carga-y-exploración-de-datos" class="level1">
 <h1>1. Carga y exploración de datos</h1>
-<div id="9b0e438d" class="cell" data-execution_count="2">
+<div id="33c6f63d" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carga y creación de sentiment_class</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/tweets_totales_con_sentimiento_ml.csv"</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span>
@@ -356,6 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantener solo las columnas necesarias</span></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df[[<span class="st">'content'</span>, <span class="st">'sentiment_class'</span>, <span class="st">'createdAt'</span>]]</span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -409,7 +415,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="balanceo-de-clases" class="level1">
 <h1>2. Balanceo de clases</h1>
-<div id="fac3eb72" class="cell" data-execution_count="3">
+<div id="d303f8b0" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver distribución original</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Distribución original:"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'sentiment_class'</span>].value_counts())</span>
@@ -430,6 +438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>sns.countplot(x<span class="op">=</span><span class="st">'sentiment_class'</span>, data<span class="op">=</span>balanced_df, palette<span class="op">=</span>[<span class="st">'green'</span>, <span class="st">'red'</span>, <span class="st">'gray'</span>])</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Distribución Balanceada de Clases'</span>)</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Distribución original:
 sentiment_class
@@ -446,7 +455,7 @@ negativo    2496
 Name: count, dtype: int64</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\User\AppData\Local\Temp\ipykernel_668\703326655.py:18: FutureWarning: 
+<pre><code>C:\Users\User\AppData\Local\Temp\ipykernel_19704\703326655.py:18: FutureWarning: 
 
 Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
 
@@ -463,7 +472,9 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 </section>
 <section id="limpieza-y-lemmatization-del-texto" class="level1">
 <h1>3. Limpieza y Lemmatization del texto</h1>
-<div id="f19c6da5" class="cell" data-execution_count="4">
+<div id="5d4b733e" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> stopwords.words(<span class="st">'spanish'</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -478,6 +489,7 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>balanced_df[<span class="st">'content_clean'</span>] <span class="op">=</span> balanced_df[<span class="st">'content'</span>].<span class="bu">apply</span>(clean_text)</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>balanced_df[[<span class="st">'content_clean'</span>, <span class="st">'sentiment_class'</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -525,18 +537,23 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 </section>
 <section id="división-del-conjunto-de-datos" class="level1">
 <h1>4. División del conjunto de datos</h1>
-<div id="0dd07249" class="cell" data-execution_count="5">
+<div id="a83f2cb9" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> balanced_df[<span class="st">'content_clean'</span>]</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> balanced_df[<span class="st">'sentiment_class'</span>]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
 <section id="creación-y-entrenamiento-del-modelo" class="level1">
 <h1>5. Creación y entrenamiento del modelo</h1>
-<div id="bb019abb" class="cell" data-execution_count="6">
+<div id="73a2d3cc" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vectorización TF-IDF + Clasificador</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Pipeline([</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'tfidf'</span>, TfidfVectorizer(max_features<span class="op">=</span><span class="dv">5000</span>, ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">2</span>))),</span>
@@ -544,6 +561,7 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>])</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <style>#sk-container-id-1 {
   /* Definition of color scheme common for light and dark mode */
@@ -1308,7 +1326,9 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="evaluación-del-modelo" class="level1">
 <h1>6. Evaluación del modelo</h1>
-<div id="decc1fb2" class="cell" data-execution_count="7">
+<div id="54eaf08a" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"=== Clasification Report ==="</span>)</span>
@@ -1322,6 +1342,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Valor real'</span>)</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Matriz de Confusión'</span>)</span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>=== Clasification Report ===
               precision    recall  f1-score   support
@@ -1346,7 +1367,9 @@ weighted avg       0.95      0.94      0.94      1498
 </section>
 <section id="evolución-temporal-del-ánimo" class="level1">
 <h1>7. Evolución temporal del ánimo</h1>
-<div id="1ee45ecd" class="cell" data-execution_count="8">
+<div id="09d1a112" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir fecha</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>balanced_df[<span class="st">'createdAt'</span>] <span class="op">=</span> pd.to_datetime(balanced_df[<span class="st">'createdAt'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>balanced_df <span class="op">=</span> balanced_df.dropna(subset<span class="op">=</span>[<span class="st">'createdAt'</span>])</span>
@@ -1363,6 +1386,7 @@ weighted avg       0.95      0.94      0.94      1498
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Proporción de Tweets'</span>)</span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">'Sentimiento'</span>)</span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
