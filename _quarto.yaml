@@ -25,6 +25,10 @@ website:
           - bagofwords.qmd
           - tfidf.qmd
           - text_classification.qmd
+      - section: "Sentimiento Analysis"
+        href: prediccion_animo_usuarios.qmd
+        contents:
+          - prediccion_animo_usuarios.qmd
 
 format:
   html:

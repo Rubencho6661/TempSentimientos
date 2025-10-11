@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Predicción del Ánimo de Usuarios</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./prediccion_animo_usuarios.html">Sentimiento Analysis</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -233,6 +233,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./prediccion_animo_usuarios.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Sentimiento Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./prediccion_animo_usuarios.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Predicción del Ánimo de Usuarios</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -278,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="importación-de-librerías" class="level1">
 <h1>Importación de librerías</h1>
-<div id="f498e93e" class="cell" data-execution_count="1">
+<div id="b9a9b891" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -317,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="carga-y-exploración-de-datos" class="level1">
 <h1>1. Carga y exploración de datos</h1>
-<div id="f710b7f3" class="cell" data-execution_count="2">
+<div id="9b0e438d" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carga y creación de sentiment_class</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/tweets_totales_con_sentimiento_ml.csv"</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span>
@@ -392,7 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="balanceo-de-clases" class="level1">
 <h1>2. Balanceo de clases</h1>
-<div id="3ba5e774" class="cell" data-execution_count="3">
+<div id="fac3eb72" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver distribución original</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Distribución original:"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'sentiment_class'</span>].value_counts())</span>
@@ -429,7 +446,7 @@ negativo    2496
 Name: count, dtype: int64</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\User\AppData\Local\Temp\ipykernel_18440\703326655.py:18: FutureWarning: 
+<pre><code>C:\Users\User\AppData\Local\Temp\ipykernel_668\703326655.py:18: FutureWarning: 
 
 Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
 
@@ -446,7 +463,7 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 </section>
 <section id="limpieza-y-lemmatization-del-texto" class="level1">
 <h1>3. Limpieza y Lemmatization del texto</h1>
-<div id="9b42f60a" class="cell" data-execution_count="4">
+<div id="f19c6da5" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> stopwords.words(<span class="st">'spanish'</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -508,7 +525,7 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 </section>
 <section id="división-del-conjunto-de-datos" class="level1">
 <h1>4. División del conjunto de datos</h1>
-<div id="e3b31e75" class="cell" data-execution_count="5">
+<div id="0dd07249" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> balanced_df[<span class="st">'content_clean'</span>]</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> balanced_df[<span class="st">'sentiment_class'</span>]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -519,7 +536,7 @@ Passing `palette` without assigning `hue` is deprecated and will be removed in v
 </section>
 <section id="creación-y-entrenamiento-del-modelo" class="level1">
 <h1>5. Creación y entrenamiento del modelo</h1>
-<div id="36ad35ab" class="cell" data-execution_count="6">
+<div id="bb019abb" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vectorización TF-IDF + Clasificador</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Pipeline([</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'tfidf'</span>, TfidfVectorizer(max_features<span class="op">=</span><span class="dv">5000</span>, ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">2</span>))),</span>
@@ -1291,7 +1308,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="evaluación-del-modelo" class="level1">
 <h1>6. Evaluación del modelo</h1>
-<div id="18b5de62" class="cell" data-execution_count="7">
+<div id="decc1fb2" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"=== Clasification Report ==="</span>)</span>
@@ -1329,7 +1346,7 @@ weighted avg       0.95      0.94      0.94      1498
 </section>
 <section id="evolución-temporal-del-ánimo" class="level1">
 <h1>7. Evolución temporal del ánimo</h1>
-<div id="a1cb8dcb" class="cell" data-execution_count="8">
+<div id="1ee45ecd" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir fecha</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>balanced_df[<span class="st">'createdAt'</span>] <span class="op">=</span> pd.to_datetime(balanced_df[<span class="st">'createdAt'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>balanced_df <span class="op">=</span> balanced_df.dropna(subset<span class="op">=</span>[<span class="st">'createdAt'</span>])</span>
