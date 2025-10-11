@@ -1,6 +1,6 @@
 ---
 title: "Predicción del Ánimo de Usuarios"
-code-fold: false
+#code-fold: false
 ---
 
 # Importación de librerías
