@@ -139,6 +139,8 @@ for col in x:
     plt.tight_layout()
     plt.show()
 ```
+
+
 ```{python}
 print("✅ EDA completo.")
 ```
@@ -172,7 +174,7 @@ print(df.duplicated().sum())
 
 ```{python}
 # Eliminar filas nulas en columnas críticas
-df = df.dropna(subset=['replyTo', 'toxicity_score', 'texto_limpio'])
+df = df.dropna(subset=['replyTo', 'toxicity_score', 'texto_limpio', 'mentions'])
 
 print("\nValores nulos por columna")
 print(df.isnull().sum())
@@ -181,10 +183,26 @@ print("\nFilas duplicadas")
 print(df.duplicated().sum())
 ```
 
+### 3. Correlaciones directas con toxicity_score para saber cuáles variables influyen más
 ```{python}
-df.info()
+# Seleccionar solo variables numéricas (incluyendo la dependiente)
+num_df = df.select_dtypes(include=np.number)
+
+# Calcular matriz de correlación
+corr_matrix = num_df.corr()
+
+# Mostrar correlación con la variable dependiente
+print("\nCorrelación de las variables con 'toxicity_score':")
+print(corr_matrix['toxicity_score'].sort_values(ascending=False))
+
+# --- Visualización del mapa de calor ---
+plt.figure(figsize=(10,8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+plt.title("Mapa de correlación entre variables numéricas y 'toxicity_score'")
+plt.show()
 ```
-### 3. Identificar tipos de variables
+
+### 4. Identificar tipos de variables
 ```{python}
 target = 'toxicity_score'
 text_col = 'texto_limpio'
@@ -196,7 +214,7 @@ print(f"Variables numéricas: {num_cols}")
 print(f"Variable de texto: {text_col}")
 ```
 
-### 4. Definir transformadores TF-IDF por tipo de variable
+### 5. Definir transformadores TF-IDF por tipo de variable
 #### preparacion de columnas de texto para el ML
 ```{python}
 text_transformer = Pipeline(steps=[
@@ -259,6 +277,14 @@ print("Dimensiones de y_train:", getattr(y_train, 'shape', None))
 ```
 
 # CLASIFICACION SUPERVISADA (RF)
+Clasificación supervisada (Random Forest)
+Objetivo: Categorizar los mensajes como tóxicos o no tóxicos a partir del toxicity_score (binario o por percentiles).
+
+Se aplicó balanceo de clases mediante SMOTE, ya que el dataset estaba desbalanceado.
+El modelo utilizado fue Random Forest Classifier.
+Se evaluó con Accuracy, Precision, Recall, F1-score y ROC-AUC.
+Se generaron matriz de confusión y curva ROC
+
 ### 1. Nuevamente stadísticas de toxicity_score
 ```{python}
 #print("\n=== Estadísticas de toxicity_score ===")
@@ -333,9 +359,14 @@ RocCurveDisplay.from_estimator(rf_clf, X_test, y_test)
 plt.title("Curva ROC - Random Forest")
 plt.show()
 ```
+# CONCLUSIONES
+El modelo mostró buen desempeño al distinguir entre mensajes tóxicos y no tóxicos. Sin embargo, debido al desbalance original, la precisión (precision) puede ser menor en la clase minoritaria.
+Se decidió balancear el dataset con el fin de evitar el sobre ajuste, es decir que el modelo aprenda de preferencia de los datos mas presentes en la BD. La curva ROC sugiere que el modelo tiene una capacidad moderada de discriminación, aunque podría mejorarse con ajuste de hiperparámetros. El balanceo mejoró el recall, reduciendo falsos negativos (mensajes tóxicos mal clasificados como no tóxicos).
 
 
 # PROBLEMA DE REGRESIÓN
+Predecir el valor continuo del toxicity_score (variable dependiente) a partir de variables numéricas explicativas.
+
 ```{python}
 y = df['toxicity_score'].values
 # Seleccionar variables numéricas explicativas (excepto la dependiente)
@@ -410,10 +441,14 @@ plt.ylabel("Frecuencia")
 plt.title("Distribución de errores residuales")
 plt.show()
 ```
+# CONCLUSIONES
+El R² = 0.0064 indica que el modelo explica en nada de la variabilidad del toxicity_score. Se obtubvieron errores bajos (MAE y RMSE pequeños), esto se debe a la concentración de valores cercanos a 0, ya que el dataset está desbalanceado, es decir, pocos mensajes muy tóxicos.
+El gráfico de dispersión entre los datos "reales" y los simulados no muestran una tendencia clara, y los errores residuales son aleatorios (moderadamente bien repartidos en torno a 0), lo que confirma que el modelo no captura relaciones fuertes entre las variables predictoras y la toxicidad. Quizás intentar con modelos no lineales (e.g., Gradient Boosting, XGBoost).
 
 
 # AGRUPAMIENTO (CLUSTERING)
-
+Objetivo: Agrupar mensajes por similitud de características numéricas.
+los datos fueron escalados con StandardScaler y con el método del codo y se seleccionó k = 3 clusters
 ```{python}
 # Seleccionar variables numéricas explicativas
 #X_df = df[num_vars].drop(columns=['toxicity_score'])
@@ -429,7 +464,7 @@ X_scaled = scaler.fit_transform(X_cluster)
 ### 3. Determinar número óptimo de clusters (método del codo)
 ```{python}
 inertia = []
-K = range(2, 10)
+K = range(1, 10)
 for k in K:
     kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
     kmeans.fit(X_scaled)
@@ -480,3 +515,7 @@ if 'toxicity_class' in df.columns:
     plt.xlabel('Nivel de Toxicidad')
     plt.show()
 ```
+
+# CONCLUSIONES
+Los tres clusters presentan una distribución heterogénea, pero sin separación totalmente clara entre clases de toxicidad.
+Al comparar los clusters con las categorías de toxicidad definidas por percentiles, se observa cierto solapamiento, lo que indica que las variables numéricas por sí solas no separan bien los niveles de toxicidad. Sin embargo, el EDA revela que hay patrones, por ejemplo, usuarios con muchos seguidores se ubican en un grupo.
