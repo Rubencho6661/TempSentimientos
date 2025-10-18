@@ -25,7 +25,7 @@ website:
           - bagofwords.qmd
           - tfidf.qmd
           - text_classification.qmd
-      - section: "Sentimiento Analysis"
+      - section: "Toxicity Analysis"
         href: TOXICITY.qmd
         contents:
           - TOXICITY.qmd
