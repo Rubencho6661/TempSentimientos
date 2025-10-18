@@ -1,5 +1,5 @@
 ---
-title: "Predicción del Ánimo de Usuarios"
+title: "ANALISIS DE SENTIMIENTOS TOXICOS"
 #code-fold: false
 ---
 
@@ -15,22 +15,32 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import (
+    classification_report, accuracy_score, precision_score, recall_score, f1_score,
+    roc_auc_score, confusion_matrix, ConfusionMatrixDisplay, roc_curve, RocCurveDisplay,
+)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.utils import resample
-import nltk
-import re
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, label_binarize
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import Ridge
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import TruncatedSVD
+from imblearn.over_sampling import SMOTE
+import re, string, nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 # Descargar recursos necesarios
 nltk.download('stopwords')
 nltk.download('wordnet')
+nltk.download('punkt')
 nltk.download('omw-1.4')
 ```
 
-### ANÁLISIS EXPLORATORIO DE DATOS (EDA)
-# 1. Carga y exploración de datos
+# ANÁLISIS EXPLORATORIO DE DATOS (EDA)
+### 1. Carga y exploración de datos
 ```{python}
 # 1. Carga y creación de sentiment_class
 url = "https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/1500_tweets_con_toxicity.csv"
@@ -39,12 +49,13 @@ df = pd.read_csv(url)
 df.head()
 ```
 
-# 2. Limpieza de caracteristicas que no aportan
+### 2. Limpieza de caracteristicas que no aportan
 ```{python}
 # Mantener solo las columnas necesarias
-df = df.drop(["tweetId", "authorId", "authorProfilePic", "conversationId", "inReplyToId", "sentiment_polarity"], axis=1)
+df = df.drop(["tweetId", "authorId", "authorProfilePic", "conversationId", "inReplyToId", "sentiment_polarity", "hashtags_count"], axis=1)
 ```
 
+### 3. Tipo y cantidad de variables (numéricas, categóricas, texto).
 ```{python}
 print("Dataset ->")
 print(df.head())
@@ -61,14 +72,13 @@ text_vars = [col for col in cat_vars if col not in ['usuario', 'sentimiento']]
 print(f"Variables de texto: {text_vars}")
 ```
 
-# 3.Estadísticas descriptivas
+### 4.Estadísticas descriptivas
 ```{python}
-
-print("\n=== Estadísticas numéricas ===")
+print("\nEstadísticas numéricas")
 print(df[num_vars].describe())
 ```
 
-# 4. Distribución de la variable toxicity_score antes de remover nulos
+### 5. Distribución de la variable toxicity_score antes de remover nulos
 ```{python}
 
 plt.figure()
@@ -85,27 +95,26 @@ plt.title("Boxplot de toxicity_score")
 plt.show()
 ```
 
-# 5. Detección de valores nulos, duplicados o atípicos
+### 6. Detección de valores nulos, duplicados o atípicos
 ```{python}
-print("\n=== Valores nulos por columna ===")
+print("\nValores nulos por columna")
 print(df.isnull().sum())
 
-print("\n=== Filas duplicadas ===")
+print("\nFilas duplicadas")
 print(df.duplicated().sum())
 ```
 ```{python}
 # Eliminar filas nulas en columnas críticas
 df = df.dropna(subset=['replyTo', 'hashtags', 'toxicity_score'])
-```
-```{python}
-print("\n=== Valores nulos por columna ===")
+
+print("\nValores nulos por columna")
 print(df.isnull().sum())
 
-print("\n=== Filas duplicadas ===")
+print("\nFilas duplicadas")
 print(df.duplicated().sum())
 ```
 
-# visualizaciones apropiadas de acuerdo al tipo de dato
+### 7. Visualizaciones apropiadas de acuerdo al tipo de dato
 ```{python}
 # Histogramas y boxplots para variables numéricas
 for col in num_vars:
@@ -120,45 +129,6 @@ for col in num_vars:
     plt.show()
 ```
 
-
-
-```{python}
-# Gráficos de barras para variables categóricas
-#for col in cat_vars:
-#    plt.figure()
-#    sns.countplot(y=df[col], order=df[col].value_counts().index)
-#    plt.title(f"Distribución de {col}")
-#    plt.show()
-```
-
-```{python}
-# Nube de palabras para variables de texto (ej: tweets)
-#text_column = 'createdAt'  # ajustar según tu dataset
-#all_text = ' '.join(df[text_column].dropna().astype(str))
-#wordcloud = WordCloud(width=800, height=400, background_color='white',
-#                      stopwords=STOPWORDS, max_words=100).generate(all_text)
-#
-#plt.figure(figsize=(15,7))
-#plt.imshow(wordcloud, interpolation='bilinear')
-#plt.axis('off')
-#plt.title("Nube de palabras del texto de tweets")
-#plt.show()
-```
-
-```{python}
-# Gráficos de dispersión si aplica
-## Ejemplo: toxicity_score vs número de comentarios
-#if 'comentarios' in df.columns:
-#    plt.figure()
-#    sns.scatterplot(x='comentarios', y='toxicity_score', data=df)
-#    plt.title("Dispersión: Comentarios vs Toxicity Score")
-#    plt.xlabel("Número de comentarios")
-#    plt.ylabel("Toxicity Score")
-#    plt.show()
-#
-#print("✅ EDA completo.")
-```
-
 ```{python}
 # Seleccionar variable dependiente
 y = df['toxicity_score']
@@ -169,16 +139,16 @@ x = [col for col in num_vars if col != 'toxicity_score']
 
 print(f"Variables numéricas explicativas: {num_vars}")
 
-# --- 3️⃣ Calcular matriz de correlación
+# Matriz de correlación
 corr = df[x + ['toxicity_score']].corr()
 
-# --- 4️⃣ Mostrar mapa de calor de correlaciones
+# Mapa de correlaciones
 plt.figure(figsize=(10,6))
 sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title("Matriz de correlación entre variables numéricas y Toxicidad")
 plt.show()
 
-# --- 5️⃣ Graficar dispersión + línea ajustada + coeficiente de correlación
+# Grafico de dispersión y ajsute
 for col in x:
     plt.figure(figsize=(6,4))
     sns.regplot(
@@ -195,5 +165,186 @@ for col in x:
     plt.tight_layout()
     plt.show()
 ```
-### PROCESAMIENTO Y CODIFICACIÓN
+```{python}
+print("✅ EDA completo.")
+```
 
+# PROCESAMIENTO Y CODIFICACIÓN
+### 1. Limpieza del texto y metadatos
+```{python}
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('spanish'))  # usar idioma según contenido
+
+def limpiar_texto(text):
+    text = str(text).lower()
+    text = re.sub(r"http\S+|www\S+|https\S+", '', text)       # eliminar URLs
+    text = re.sub(r'@\w+|#\w+', '', text)                     # eliminar menciones y hashtags
+    text = text.translate(str.maketrans('', '', string.punctuation))  # eliminar puntuación
+    tokens = nltk.word_tokenize(text)
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stop_words and word.isalpha()]
+    return ' '.join(tokens)
+
+df['texto_limpio'] = df['content'].apply(limpiar_texto)
+```
+
+```{python}
+# Identificar tipos de variables
+target = 'toxicity_score'
+text_col = 'texto_limpio'
+cat_cols = df.select_dtypes(include='object').drop(columns=['texto', text_col], errors='ignore').columns.tolist()
+num_cols = df.select_dtypes(include=np.number).drop(columns=[target], errors='ignore').columns.tolist()
+
+print(f"Variables categóricas: {cat_cols}")
+print(f"Variables numéricas: {num_cols}")
+print(f"Variable de texto: {text_col}")
+```
+
+### 2. Definir transformadores TF-IDF por tipo de variable
+#### preparacion de columnas de texto para el ML
+```{python}
+text_transformer = Pipeline(steps=[
+    ('tfidf', TfidfVectorizer(max_features=2000, ngram_range=(1,2))),
+    # Reduce dimensionality of TF-IDF to obtain a dense, lower-dimensional representation
+    ('svd', TruncatedSVD(n_components=100, random_state=42))
+])
+
+# Categorización de variables OneHotEncoder
+cat_transformer = Pipeline(steps=[
+    # Return dense output so downstream resamplers (SMOTE) can operate
+    ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
+])
+
+# Escalamiento de variables numéricas
+num_transformer = Pipeline(steps=[
+    ('scaler', StandardScaler())
+])
+```
+
+### Combinar transformadores para la nueva database en un ColumnTransformer para modelacións
+```{python}
+preprocessor = ColumnTransformer(transformers=[
+    ('text', text_transformer, text_col),
+    ('cat', cat_transformer, cat_cols),
+    ('num', num_transformer, num_cols)
+])
+
+# Crear pipeline completo (solo preprocesamiento)
+preprocessing_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor)
+])
+```
+
+
+```{python}
+# Aplicar pipeline de preprocesamiento
+print("\nEjecutando preprocesamiento...")
+# --- Avoid data leakage: split *before* fitting vectorizers / scalers
+# Create binary target for classification (threshold can be adjusted)
+umbral = 0.5
+df['toxicity_class'] = df['toxicity_score'].apply(lambda x: 1 if x >= umbral else 0)
+
+# Prepare feature dataframe (drop target columns)
+X_df = df.drop(columns=[target, 'toxicity_class'], errors='ignore')
+y = df['toxicity_class'].values
+
+# Split raw dataframes (preprocessing is fit only on training data)
+X_train_df, X_test_df, y_train, y_test = train_test_split(X_df, y, test_size=0.2, random_state=42, stratify=y)
+
+# Fit preprocessors on training data and transform both train and test
+X_train = preprocessing_pipeline.fit_transform(X_train_df)
+X_test = preprocessing_pipeline.transform(X_test_df)
+
+print("✅ Preprocesamiento completado.")
+print("Dimensiones X_train:", getattr(X_train, 'shape', None))
+print("Dimensiones X_test:", getattr(X_test, 'shape', None))
+print("Dimensiones de y_train:", getattr(y_train, 'shape', None))
+```
+
+# CLASIFICACION SUPERVISADA (RF)
+### 1. Nuevamente stadísticas de toxicity_score
+```{python}
+print("\n=== Estadísticas de toxicity_score ===")
+print(df['toxicity_score'].describe())
+
+plt.figure()
+sns.histplot(df['toxicity_score'], bins=20, kde=True)
+plt.title("Distribución de toxicity_score")
+plt.xlabel("Toxicity Score")
+plt.ylabel("Frecuencia")
+plt.show()
+```
+
+### 2. Definición umbrales
+Definir variable categórica
+Ejemplo simple: binaria
+0 = No tóxico (toxicity_score < 0.5)
+1 = Tóxico (toxicity_score >= 0.5)
+Se puede ajustar a multiclase si se desea
+```{python}
+# The binary target (`toxicity_class`) was created earlier during preprocessing.
+# We already split the raw dataframe and applied preprocessing to obtain
+# `X_train`, `X_test`, `y_train`, `y_test`.
+
+print("\nDistribución de clases:")
+print(df['toxicity_class'].value_counts())
+
+# At this point we will use the precomputed `X_train`, `X_test`, `y_train`, `y_test`
+# produced in the preprocessing step above. Avoid re-splitting or reusing
+# variables that are no longer defined (e.g., `X`).
+```
+
+### 3. División del dataset en entrenamiento y prueba
+```{python}
+# The dataset has already been split earlier (before preprocessing) into
+# `X_train`, `X_test`, `y_train`, `y_test`. Do not re-split here to avoid
+# overwriting those arrays or causing NameError for `X_raw`/`y_raw`.
+```
+
+### 4. Balanceo de clases con SMOTE
+```{python}
+smote = SMOTE(random_state=42)
+X_train_bal, y_train_bal = smote.fit_resample(X_train, y_train)
+
+print("\nDistribución después de SMOTE:")
+print(pd.Series(y_train_bal).value_counts())
+```
+
+### 5. Entrenamiento del modelo Random Forest
+```{python}
+rf_clf = RandomForestClassifier(n_estimators=200, random_state=42)
+rf_clf.fit(X_train_bal, y_train_bal)
+```
+
+### 6. Predicción
+```{python}
+y_pred = rf_clf.predict(X_test)
+y_proba = rf_clf.predict_proba(X_test)[:,1]  # probabilidades para ROC
+```
+
+### 7. Evaluación del modelo
+```{python}
+acc = accuracy_score(y_test, y_pred)
+prec = precision_score(y_test, y_pred)
+rec = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+roc_auc = roc_auc_score(y_test, y_proba)
+print("\n=== Métricas de evaluación ===")
+print(f"Accuracy:  {acc:.3f}")
+print(f"Precision: {prec:.3f}")
+print(f"Recall:    {rec:.3f}")
+print(f"F1 Score:  {f1:.3f}")
+print(f"ROC-AUC:   {roc_auc:.3f}")
+```
+```{python}
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['No Tóxico','Tóxico'])
+disp.plot(cmap=plt.cm.Blues)
+plt.title("Matriz de Confusión - Random Forest")
+plt.show()
+```
+
+```{python}
+RocCurveDisplay.from_estimator(rf_clf, X_test, y_test)
+plt.title("Curva ROC - Random Forest")
+plt.show()
+```

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Predicción del Ánimo de Usuarios – Machine Learning</title>
+<title>ANALISIS DE SENTIMIENTOS TOXICOS – Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./TOXICITY.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Predicción del Ánimo de Usuarios</span></a>
+ <span class="menu-text">ANALISIS DE SENTIMIENTOS TOXICOS</span></a>
   </div>
 </li>
       </ul>
@@ -260,18 +260,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#importación-de-librerías" id="toc-importación-de-librerías" class="nav-link active" data-scroll-target="#importación-de-librerías">Importación de librerías</a>
+  <li><a href="#importación-de-librerías" id="toc-importación-de-librerías" class="nav-link active" data-scroll-target="#importación-de-librerías">Importación de librerías</a></li>
+  <li><a href="#análisis-exploratorio-de-datos-eda" id="toc-análisis-exploratorio-de-datos-eda" class="nav-link" data-scroll-target="#análisis-exploratorio-de-datos-eda">ANÁLISIS EXPLORATORIO DE DATOS (EDA)</a>
   <ul class="collapse">
-  <li><a href="#análisis-exploratorio-de-datos-eda" id="toc-análisis-exploratorio-de-datos-eda" class="nav-link" data-scroll-target="#análisis-exploratorio-de-datos-eda">ANÁLISIS EXPLORATORIO DE DATOS (EDA)</a></li>
-  </ul></li>
   <li><a href="#carga-y-exploración-de-datos" id="toc-carga-y-exploración-de-datos" class="nav-link" data-scroll-target="#carga-y-exploración-de-datos">1. Carga y exploración de datos</a></li>
   <li><a href="#limpieza-de-caracteristicas-que-no-aportan" id="toc-limpieza-de-caracteristicas-que-no-aportan" class="nav-link" data-scroll-target="#limpieza-de-caracteristicas-que-no-aportan">2. Limpieza de caracteristicas que no aportan</a></li>
-  <li><a href="#estadísticas-descriptivas" id="toc-estadísticas-descriptivas" class="nav-link" data-scroll-target="#estadísticas-descriptivas">3.Estadísticas descriptivas</a></li>
-  <li><a href="#distribución-de-la-variable-toxicity_score" id="toc-distribución-de-la-variable-toxicity_score" class="nav-link" data-scroll-target="#distribución-de-la-variable-toxicity_score">4. Distribución de la variable toxicity_score</a></li>
-  <li><a href="#detección-de-valores-nulos-duplicados-o-atípicos" id="toc-detección-de-valores-nulos-duplicados-o-atípicos" class="nav-link" data-scroll-target="#detección-de-valores-nulos-duplicados-o-atípicos">5. Detección de valores nulos, duplicados o atípicos</a></li>
-  <li><a href="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" id="toc-visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="nav-link" data-scroll-target="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato">visualizaciones apropiadas de acuerdo al tipo de dato</a>
+  <li><a href="#tipo-y-cantidad-de-variables-numéricas-categóricas-texto." id="toc-tipo-y-cantidad-de-variables-numéricas-categóricas-texto." class="nav-link" data-scroll-target="#tipo-y-cantidad-de-variables-numéricas-categóricas-texto.">3. Tipo y cantidad de variables (numéricas, categóricas, texto).</a></li>
+  <li><a href="#estadísticas-descriptivas" id="toc-estadísticas-descriptivas" class="nav-link" data-scroll-target="#estadísticas-descriptivas">4.Estadísticas descriptivas</a></li>
+  <li><a href="#distribución-de-la-variable-toxicity_score-antes-de-remover-nulos" id="toc-distribución-de-la-variable-toxicity_score-antes-de-remover-nulos" class="nav-link" data-scroll-target="#distribución-de-la-variable-toxicity_score-antes-de-remover-nulos">5. Distribución de la variable toxicity_score antes de remover nulos</a></li>
+  <li><a href="#detección-de-valores-nulos-duplicados-o-atípicos" id="toc-detección-de-valores-nulos-duplicados-o-atípicos" class="nav-link" data-scroll-target="#detección-de-valores-nulos-duplicados-o-atípicos">6. Detección de valores nulos, duplicados o atípicos</a></li>
+  <li><a href="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" id="toc-visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="nav-link" data-scroll-target="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato">7. Visualizaciones apropiadas de acuerdo al tipo de dato</a></li>
+  </ul></li>
+  <li><a href="#procesamiento-y-codificación" id="toc-procesamiento-y-codificación" class="nav-link" data-scroll-target="#procesamiento-y-codificación">PROCESAMIENTO Y CODIFICACIÓN</a>
   <ul class="collapse">
-  <li><a href="#procesamiento-y-codificación" id="toc-procesamiento-y-codificación" class="nav-link" data-scroll-target="#procesamiento-y-codificación">PROCESAMIENTO Y CODIFICACIÓN</a></li>
+  <li><a href="#limpieza-del-texto-y-metadatos" id="toc-limpieza-del-texto-y-metadatos" class="nav-link" data-scroll-target="#limpieza-del-texto-y-metadatos">1. Limpieza del texto y metadatos</a></li>
+  <li><a href="#definir-transformadores-tf-idf-por-tipo-de-variable" id="toc-definir-transformadores-tf-idf-por-tipo-de-variable" class="nav-link" data-scroll-target="#definir-transformadores-tf-idf-por-tipo-de-variable">2. Definir transformadores TF-IDF por tipo de variable</a></li>
+  <li><a href="#combinar-transformadores-para-la-nueva-database-en-un-columntransformer-para-modelacións" id="toc-combinar-transformadores-para-la-nueva-database-en-un-columntransformer-para-modelacións" class="nav-link" data-scroll-target="#combinar-transformadores-para-la-nueva-database-en-un-columntransformer-para-modelacións">Combinar transformadores para la nueva database en un ColumnTransformer para modelacións</a></li>
+  </ul></li>
+  <li><a href="#clasificacion-supervisada-rf" id="toc-clasificacion-supervisada-rf" class="nav-link" data-scroll-target="#clasificacion-supervisada-rf">CLASIFICACION SUPERVISADA (RF)</a>
+  <ul class="collapse">
+  <li><a href="#nuevamente-stadísticas-de-toxicity_score" id="toc-nuevamente-stadísticas-de-toxicity_score" class="nav-link" data-scroll-target="#nuevamente-stadísticas-de-toxicity_score">1. Nuevamente stadísticas de toxicity_score</a></li>
+  <li><a href="#definición-umbrales" id="toc-definición-umbrales" class="nav-link" data-scroll-target="#definición-umbrales">2. Definición umbrales</a></li>
+  <li><a href="#división-del-dataset-en-entrenamiento-y-prueba" id="toc-división-del-dataset-en-entrenamiento-y-prueba" class="nav-link" data-scroll-target="#división-del-dataset-en-entrenamiento-y-prueba">3. División del dataset en entrenamiento y prueba</a></li>
+  <li><a href="#balanceo-de-clases-con-smote" id="toc-balanceo-de-clases-con-smote" class="nav-link" data-scroll-target="#balanceo-de-clases-con-smote">4. Balanceo de clases con SMOTE</a></li>
+  <li><a href="#entrenamiento-del-modelo-random-forest" id="toc-entrenamiento-del-modelo-random-forest" class="nav-link" data-scroll-target="#entrenamiento-del-modelo-random-forest">5. Entrenamiento del modelo Random Forest</a></li>
+  <li><a href="#predicción" id="toc-predicción" class="nav-link" data-scroll-target="#predicción">6. Predicción</a></li>
+  <li><a href="#evaluación-del-modelo" id="toc-evaluación-del-modelo" class="nav-link" data-scroll-target="#evaluación-del-modelo">7. Evaluación del modelo</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -281,7 +295,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Predicción del Ánimo de Usuarios</h1>
+<h1 class="title">ANALISIS DE SENTIMIENTOS TOXICOS</h1>
 </div>
 
 
@@ -300,30 +314,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="importación-de-librerías" class="level1">
 <h1>Importación de librerías</h1>
-<div id="e0839c1d" class="cell" data-execution_count="1">
+<div id="338d0a28" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report, confusion_matrix</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.utils <span class="im">import</span> resample</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Descargar recursos necesarios</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'omw-1.4'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> pearsonr</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> (</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    classification_report, accuracy_score, precision_score, recall_score, f1_score,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    roc_auc_score, confusion_matrix, ConfusionMatrixDisplay, roc_curve, RocCurveDisplay,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.utils <span class="im">import</span> resample</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler, label_binarize</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> TruncatedSVD</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> imblearn.over_sampling <span class="im">import</span> SMOTE</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re, string, nltk</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Descargar recursos necesarios</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'omw-1.4'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to
@@ -332,21 +357,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [nltk_data] Downloading package wordnet to
 [nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
 [nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
 [nltk_data] Downloading package omw-1.4 to
 [nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
 [nltk_data]   Package omw-1.4 is already up-to-date!</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>True</code></pre>
 </div>
 </div>
-<section id="análisis-exploratorio-de-datos-eda" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-exploratorio-de-datos-eda">ANÁLISIS EXPLORATORIO DE DATOS (EDA)</h3>
 </section>
-</section>
-<section id="carga-y-exploración-de-datos" class="level1">
-<h1>1. Carga y exploración de datos</h1>
-<div id="7dfd6183" class="cell" data-execution_count="2">
+<section id="análisis-exploratorio-de-datos-eda" class="level1">
+<h1>ANÁLISIS EXPLORATORIO DE DATOS (EDA)</h1>
+<section id="carga-y-exploración-de-datos" class="level3">
+<h3 class="anchored" data-anchor-id="carga-y-exploración-de-datos">1. Carga y exploración de datos</h3>
+<div id="ec6f8914" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carga y creación de sentiment_class</span></span>
@@ -355,7 +382,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -515,16 +542,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="limpieza-de-caracteristicas-que-no-aportan" class="level1">
-<h1>2. Limpieza de caracteristicas que no aportan</h1>
-<div id="0eb48c55" class="cell" data-execution_count="3">
+<section id="limpieza-de-caracteristicas-que-no-aportan" class="level3">
+<h3 class="anchored" data-anchor-id="limpieza-de-caracteristicas-que-no-aportan">2. Limpieza de caracteristicas que no aportan</h3>
+<div id="b331616e" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantener solo las columnas necesarias</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop([<span class="st">"tweetId"</span>, <span class="st">"authorId"</span>, <span class="st">"authorProfilePic"</span>, <span class="st">"conversationId"</span>, <span class="st">"inReplyToId"</span>, <span class="st">"sentiment_polarity"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop([<span class="st">"tweetId"</span>, <span class="st">"authorId"</span>, <span class="st">"authorProfilePic"</span>, <span class="st">"conversationId"</span>, <span class="st">"inReplyToId"</span>, <span class="st">"sentiment_polarity"</span>, <span class="st">"hashtags_count"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="da327c3d" class="cell" data-execution_count="4">
+</section>
+<section id="tipo-y-cantidad-de-variables-numéricas-categóricas-texto." class="level3">
+<h3 class="anchored" data-anchor-id="tipo-y-cantidad-de-variables-numéricas-categóricas-texto.">3. Tipo y cantidad de variables (numéricas, categóricas, texto).</h3>
+<div id="ca19a962" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset -&gt;"</span>)</span>
@@ -571,12 +601,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3                                 Denise         ardededa           False   
 4                         Luis Marquínez      LMarquinezm           False   
 
-   authorFollowers       authorJoinDate  ...         hashtags  \
-0               18  2010-08-10 21:35:00  ...              NaN   
-1               58  2021-03-07 20:42:00  ...              NaN   
-2               75  2024-10-28 20:59:00  ...              NaN   
-3               85  2011-06-12 13:26:00  ...  NoboaPresidente   
-4               43  2013-06-28 01:23:00  ...              NaN   
+   authorFollowers       authorJoinDate              source         hashtags  \
+0               18  2010-08-10 21:35:00  Twitter for iPhone              NaN   
+1               58  2021-03-07 20:42:00  Twitter for iPhone              NaN   
+2               75  2024-10-28 20:59:00  Twitter for iPhone              NaN   
+3               85  2011-06-12 13:26:00  Twitter for iPhone  NoboaPresidente   
+4               43  2013-06-28 01:23:00  Twitter for iPhone              NaN   
 
                                             mentions                 Date  \
 0                      @DanielNoboaOk, @DiegoBorjaPC  2025-01-12 20:26:32   
@@ -585,26 +615,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 3                                     @DanielNoboaOk  2025-01-20 02:21:31   
 4  @slider1908, @LuisaGonzalezEc, @DianaAtamaint,...  2025-02-08 14:59:07   
 
-  time_response  account_age_days  mentions_count  hashtags_count  \
-0    364.466667              5261               2               0   
-1    153.133333              1399               1               0   
-2   1211.633333                68               2               0   
-3    758.483333              4955               1               0   
-4    359.883333              4208               5               0   
+   time_response  account_age_days  mentions_count  content_length  \
+0     364.466667              5261               2             309   
+1     153.133333              1399               1              70   
+2    1211.633333                68               2             122   
+3     758.483333              4955               1              41   
+4     359.883333              4208               5             101   
 
-   content_length  has_profile_picture  toxicity_score  
-0             309                False        0.543256  
-1              70                 True        0.426917  
-2             122                 True        0.555970  
-3              41                 True        0.046615  
-4             101                 True        0.846027  
-
-[5 rows x 21 columns]
+   has_profile_picture  toxicity_score  
+0                False        0.543256  
+1                 True        0.426917  
+2                 True        0.555970  
+3                 True        0.046615  
+4                 True        0.846027  
 
 Información general -&gt;
 &lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 1500 entries, 0 to 1499
-Data columns (total 21 columns):
+Data columns (total 20 columns):
  #   Column               Non-Null Count  Dtype  
 ---  ------               --------------  -----  
  0   tweetUrl             1500 non-null   object 
@@ -624,12 +652,11 @@ Data columns (total 21 columns):
  14  time_response        1500 non-null   float64
  15  account_age_days     1500 non-null   int64  
  16  mentions_count       1500 non-null   int64  
- 17  hashtags_count       1500 non-null   int64  
- 18  content_length       1500 non-null   int64  
- 19  has_profile_picture  1500 non-null   bool   
- 20  toxicity_score       1347 non-null   float64
-dtypes: bool(3), float64(2), int64(5), object(11)
-memory usage: 215.5+ KB
+ 17  content_length       1500 non-null   int64  
+ 18  has_profile_picture  1500 non-null   bool   
+ 19  toxicity_score       1347 non-null   float64
+dtypes: bool(3), float64(2), int64(4), object(11)
+memory usage: 203.7+ KB
 None
 
 Tipos de variables -&gt;
@@ -650,29 +677,28 @@ Date                    object
 time_response          float64
 account_age_days         int64
 mentions_count           int64
-hashtags_count           int64
 content_length           int64
 has_profile_picture       bool
 toxicity_score         float64
 dtype: object
 
-Variables numéricas: ['authorFollowers', 'time_response', 'account_age_days', 'mentions_count', 'hashtags_count', 'content_length', 'toxicity_score']
+Variables numéricas: ['authorFollowers', 'time_response', 'account_age_days', 'mentions_count', 'content_length', 'toxicity_score']
 Variables categóricas: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName', 'authorUsername', 'authorJoinDate', 'source', 'hashtags', 'mentions', 'Date']
 Variables de texto: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName', 'authorUsername', 'authorJoinDate', 'source', 'hashtags', 'mentions', 'Date']</code></pre>
 </div>
 </div>
 </section>
-<section id="estadísticas-descriptivas" class="level1">
-<h1>3.Estadísticas descriptivas</h1>
-<div id="9e5b6e7c" class="cell" data-execution_count="5">
+<section id="estadísticas-descriptivas" class="level3">
+<h3 class="anchored" data-anchor-id="estadísticas-descriptivas">4.Estadísticas descriptivas</h3>
+<div id="f5db9f92" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Estadísticas numéricas ==="</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Estadísticas numéricas"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[num_vars].describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-=== Estadísticas numéricas ===
+Estadísticas numéricas
        authorFollowers  time_response  account_age_days  mentions_count  \
 count     1.500000e+03    1500.000000       1500.000000     1500.000000   
 mean      3.625721e+03    1170.037578       2271.134000        1.723333   
@@ -683,21 +709,21 @@ min       0.000000e+00       0.133333        -90.000000        0.000000
 75%       1.992500e+02    1265.716667       4420.750000        2.000000   
 max       4.577730e+06   63569.000000       6506.000000       10.000000   
 
-       hashtags_count  content_length  toxicity_score  
-count          1500.0     1500.000000     1347.000000  
-mean              0.0      116.528000        0.253879  
-std               0.0       77.493712        0.243942  
-min               0.0       17.000000        0.001940  
-25%               0.0       57.000000        0.028444  
-50%               0.0       96.000000        0.188392  
-75%               0.0      150.000000        0.426917  
-max               0.0      684.000000        0.939145  </code></pre>
+       content_length  toxicity_score  
+count     1500.000000     1347.000000  
+mean       116.528000        0.253879  
+std         77.493712        0.243942  
+min         17.000000        0.001940  
+25%         57.000000        0.028444  
+50%         96.000000        0.188392  
+75%        150.000000        0.426917  
+max        684.000000        0.939145  </code></pre>
 </div>
 </div>
 </section>
-<section id="distribución-de-la-variable-toxicity_score" class="level1">
-<h1>4. Distribución de la variable toxicity_score</h1>
-<div id="a0459374" class="cell" data-execution_count="6">
+<section id="distribución-de-la-variable-toxicity_score-antes-de-remover-nulos" class="level3">
+<h3 class="anchored" data-anchor-id="distribución-de-la-variable-toxicity_score-antes-de-remover-nulos">5. Distribución de la variable toxicity_score antes de remover nulos</h3>
+<div id="d5874b64" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
@@ -729,20 +755,20 @@ max               0.0      684.000000        0.939145  </code></pre>
 </div>
 </div>
 </section>
-<section id="detección-de-valores-nulos-duplicados-o-atípicos" class="level1">
-<h1>5. Detección de valores nulos, duplicados o atípicos</h1>
-<div id="5de2168a" class="cell" data-execution_count="7">
+<section id="detección-de-valores-nulos-duplicados-o-atípicos" class="level3">
+<h3 class="anchored" data-anchor-id="detección-de-valores-nulos-duplicados-o-atípicos">6. Detección de valores nulos, duplicados o atípicos</h3>
+<div id="4258fc25" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Valores nulos por columna ==="</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Valores nulos por columna"</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isnull().<span class="bu">sum</span>())</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Filas duplicadas ==="</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Filas duplicadas"</span>)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.duplicated().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-=== Valores nulos por columna ===
+Valores nulos por columna
 tweetUrl                  0
 content                   0
 isReply                   0
@@ -760,35 +786,30 @@ Date                      0
 time_response             0
 account_age_days          0
 mentions_count            0
-hashtags_count            0
 content_length            0
 has_profile_picture       0
 toxicity_score          153
 dtype: int64
 
-=== Filas duplicadas ===
+Filas duplicadas
 0</code></pre>
 </div>
 </div>
-<div id="b820c3d9" class="cell" data-execution_count="8">
+<div id="fd286270" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar filas nulas en columnas críticas</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">'replyTo'</span>, <span class="st">'hashtags'</span>, <span class="st">'toxicity_score'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<div id="347fbaaf" class="cell" data-execution_count="9">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Valores nulos por columna ==="</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isnull().<span class="bu">sum</span>())</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Filas duplicadas ==="</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.duplicated().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">'replyTo'</span>, <span class="st">'hashtags'</span>, <span class="st">'toxicity_score'</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Valores nulos por columna"</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isnull().<span class="bu">sum</span>())</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Filas duplicadas"</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.duplicated().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-=== Valores nulos por columna ===
+Valores nulos por columna
 tweetUrl               0
 content                0
 isReply                0
@@ -806,320 +827,1145 @@ Date                   0
 time_response          0
 account_age_days       0
 mentions_count         0
-hashtags_count         0
 content_length         0
 has_profile_picture    0
 toxicity_score         0
 dtype: int64
 
-=== Filas duplicadas ===
+Filas duplicadas
 0</code></pre>
 </div>
 </div>
 </section>
-<section id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="level1">
-<h1>visualizaciones apropiadas de acuerdo al tipo de dato</h1>
-<div id="479edce6" class="cell" data-execution_count="10">
+<section id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="level3">
+<h3 class="anchored" data-anchor-id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato">7. Visualizaciones apropiadas de acuerdo al tipo de dato</h3>
+<div id="339f6a50" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas y boxplots para variables numéricas</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> num_vars:</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    sns.histplot(df[col], bins<span class="op">=</span><span class="dv">20</span>, kde<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Histograma de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span>df[col])</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Boxplot de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas y boxplots para variables numéricas</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> num_vars:</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    sns.histplot(df[col], bins<span class="op">=</span><span class="dv">20</span>, kde<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Histograma de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span>df[col])</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Boxplot de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-1.png" width="593" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-1.png" width="593" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-2.png" width="545" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-2.png" width="545" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-3.png" width="593" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-3.png" width="593" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-4.png" width="545" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-4.png" width="545" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-5.png" width="601" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-5.png" width="601" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-6.png" width="561" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-6.png" width="561" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-7.png" width="585" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-7.png" width="585" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-8.png" width="545" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-8.png" width="545" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-9.png" width="593" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-9.png" width="585" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-10.png" width="545" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-10.png" width="545" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-11.png" width="585" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-11.png" width="585" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-12.png" width="545" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-13.png" width="585" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-11-output-14.png" width="545" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-10-output-12.png" width="545" height="449" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="67ee3689" class="cell" data-execution_count="11">
+<div id="685f23fe" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de barras para variables categóricas</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> cat_vars:</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    sns.countplot(y<span class="op">=</span>df[col], order<span class="op">=</span>df[col].value_counts().index)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Distribución de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar variable dependiente</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'toxicity_score'</span>]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar variables numéricas explicativas (excepto la dependiente)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>np.number).columns.tolist()</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> num_vars <span class="cf">if</span> col <span class="op">!=</span> <span class="st">'toxicity_score'</span>]</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variables numéricas explicativas: </span><span class="sc">{</span>num_vars<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de correlación</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>corr <span class="op">=</span> df[x <span class="op">+</span> [<span class="st">'toxicity_score'</span>]].corr()</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Mapa de correlaciones</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">6</span>))</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr, annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">'coolwarm'</span>, fmt<span class="op">=</span><span class="st">".2f"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Matriz de correlación entre variables numéricas y Toxicidad"</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico de dispersión y ajsute</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> x:</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    sns.regplot(</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>df, x<span class="op">=</span>col, y<span class="op">=</span><span class="st">'toxicity_score'</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        scatter_kws<span class="op">=</span>{<span class="st">'alpha'</span>:<span class="fl">0.5</span>}, line_kws<span class="op">=</span>{<span class="st">'color'</span>:<span class="st">'red'</span>}</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcular coeficiente de correlación de Pearson</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    r, p <span class="op">=</span> pearsonr(df[col].dropna(), df[<span class="st">'toxicity_score'</span>].dropna())</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"</span><span class="sc">{</span>col<span class="sc">}</span><span class="ss"> vs Toxicity Score</span><span class="ch">\n</span><span class="ss">r = </span><span class="sc">{</span>r<span class="sc">:.2f}</span><span class="ss">, p = </span><span class="sc">{</span>p<span class="sc">:.3e}</span><span class="ss">"</span>)</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(col)</span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"toxicity_score"</span>)</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-1.png" width="1003" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127466 (\N{REGIONAL INDICATOR SYMBOL LETTER E}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127464 (\N{REGIONAL INDICATOR SYMBOL LETTER C}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128170 (\N{FLEXED BICEPS}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129327 (\N{SHOCKED FACE WITH EXPLODING HEAD}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 9994 (\N{RAISED FIST}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129317 (\N{LYING FACE}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128153 (\N{BLUE HEART}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128591 (\N{PERSON WITH FOLDED HANDS}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127995 (\N{EMOJI MODIFIER FITZPATRICK TYPE-1-2}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129325 (\N{SMILING FACE WITH SMILING EYES AND HAND COVERING MOUTH}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127997 (\N{EMOJI MODIFIER FITZPATRICK TYPE-4}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129309 (\N{HANDSHAKE}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128680 (\N{POLICE CARS REVOLVING LIGHT}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128227 (\N{CHEERING MEGAPHONE}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128071 (\N{WHITE DOWN POINTING BACKHAND INDEX}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)</code></pre>
+<div class="cell-output cell-output-stdout">
+<pre><code>Variables numéricas explicativas: ['authorFollowers', 'time_response', 'account_age_days', 'mentions_count', 'content_length', 'toxicity_score']</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-3.png" width="2840" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-2.png" width="836" height="615" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-4.png" width="679" height="450" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-3.png" width="566" height="375" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-5.png" width="709" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127466 (\N{REGIONAL INDICATOR SYMBOL LETTER E}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127464 (\N{REGIONAL INDICATOR SYMBOL LETTER C}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127477 (\N{REGIONAL INDICATOR SYMBOL LETTER P}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127480 (\N{REGIONAL INDICATOR SYMBOL LETTER S}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127465 (\N{REGIONAL INDICATOR SYMBOL LETTER D}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129415 (\N{BAT}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120189 (\N{MATHEMATICAL BOLD FRAKTUR CAPITAL R}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120212 (\N{MATHEMATICAL BOLD FRAKTUR SMALL O}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120200 (\N{MATHEMATICAL BOLD FRAKTUR SMALL C}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120173 (\N{MATHEMATICAL BOLD FRAKTUR CAPITAL B}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120218 (\N{MATHEMATICAL BOLD FRAKTUR SMALL U}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120215 (\N{MATHEMATICAL BOLD FRAKTUR SMALL R}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120204 (\N{MATHEMATICAL BOLD FRAKTUR SMALL G}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)
-D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120216 (\N{MATHEMATICAL BOLD FRAKTUR SMALL S}) missing from font(s) DejaVu Sans.
-  fig.canvas.print_figure(bytes_io, **kw)</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-7.png" width="815" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-4.png" width="566" height="374" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-8.png" width="699" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-5.png" width="566" height="374" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-9.png" width="709" height="450" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-6.png" width="566" height="374" class="figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-10.png" width="685" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-11.png" width="1297" height="450" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-12.png" width="1683" height="449" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TOXICITY_files/figure-html/cell-12-output-13.png" width="709" height="449" class="figure-img"></p>
+<p><img src="TOXICITY_files/figure-html/cell-11-output-7.png" width="566" height="374" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="6a3f5b81" class="cell" data-execution_count="12">
+<div id="21248271" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nube de palabras para variables de texto (ej: tweets)</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#text_column = 'createdAt'  # ajustar según tu dataset</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#all_text = ' '.join(df[text_column].dropna().astype(str))</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#wordcloud = WordCloud(width=800, height=400, background_color='white',</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                      stopwords=STOPWORDS, max_words=100).generate(all_text)</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.figure(figsize=(15,7))</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.imshow(wordcloud, interpolation='bilinear')</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('off')</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.title("Nube de palabras del texto de tweets")</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-</div>
-<div id="37853725" class="cell" data-execution_count="13">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de dispersión si aplica</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: toxicity_score vs número de comentarios</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'comentarios'</span> <span class="kw">in</span> df.columns:</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(x<span class="op">=</span><span class="st">'comentarios'</span>, y<span class="op">=</span><span class="st">'toxicity_score'</span>, data<span class="op">=</span>df)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Dispersión: Comentarios vs Toxicity Score"</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Número de comentarios"</span>)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Toxicity Score"</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ EDA completo."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ EDA completo."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>✅ EDA completo.</code></pre>
 </div>
 </div>
-<section id="procesamiento-y-codificación" class="level3">
-<h3 class="anchored" data-anchor-id="procesamiento-y-codificación">PROCESAMIENTO Y CODIFICACIÓN</h3>
+</section>
+</section>
+<section id="procesamiento-y-codificación" class="level1">
+<h1>PROCESAMIENTO Y CODIFICACIÓN</h1>
+<section id="limpieza-del-texto-y-metadatos" class="level3">
+<h3 class="anchored" data-anchor-id="limpieza-del-texto-y-metadatos">1. Limpieza del texto y metadatos</h3>
+<div id="4d6eece5" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">'spanish'</span>))  <span class="co"># usar idioma según contenido</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> limpiar_texto(text):</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> <span class="bu">str</span>(text).lower()</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r"http</span><span class="dv">\S</span><span class="op">+</span><span class="cf">|</span><span class="vs">www</span><span class="dv">\S</span><span class="op">+</span><span class="cf">|</span><span class="vs">https</span><span class="dv">\S</span><span class="op">+</span><span class="vs">"</span>, <span class="st">''</span>, text)       <span class="co"># eliminar URLs</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r'@</span><span class="dv">\w</span><span class="op">+</span><span class="cf">|</span><span class="vs">#</span><span class="dv">\w</span><span class="op">+</span><span class="vs">'</span>, <span class="st">''</span>, text)                     <span class="co"># eliminar menciones y hashtags</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.translate(<span class="bu">str</span>.maketrans(<span class="st">''</span>, <span class="st">''</span>, string.punctuation))  <span class="co"># eliminar puntuación</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> nltk.word_tokenize(text)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> [lemmatizer.lemmatize(word) <span class="cf">for</span> word <span class="kw">in</span> tokens <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> stop_words <span class="kw">and</span> word.isalpha()]</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">' '</span>.join(tokens)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'texto_limpio'</span>] <span class="op">=</span> df[<span class="st">'content'</span>].<span class="bu">apply</span>(limpiar_texto)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="ac6aac7c" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificar tipos de variables</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">'toxicity_score'</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>text_col <span class="op">=</span> <span class="st">'texto_limpio'</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>cat_cols <span class="op">=</span> df.select_dtypes(include<span class="op">=</span><span class="st">'object'</span>).drop(columns<span class="op">=</span>[<span class="st">'texto'</span>, text_col], errors<span class="op">=</span><span class="st">'ignore'</span>).columns.tolist()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>np.number).drop(columns<span class="op">=</span>[target], errors<span class="op">=</span><span class="st">'ignore'</span>).columns.tolist()</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variables categóricas: </span><span class="sc">{</span>cat_cols<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variables numéricas: </span><span class="sc">{</span>num_cols<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variable de texto: </span><span class="sc">{</span>text_col<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Variables categóricas: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName', 'authorUsername', 'authorJoinDate', 'source', 'hashtags', 'mentions', 'Date']
+Variables numéricas: ['authorFollowers', 'time_response', 'account_age_days', 'mentions_count', 'content_length']
+Variable de texto: texto_limpio</code></pre>
+</div>
+</div>
+</section>
+<section id="definir-transformadores-tf-idf-por-tipo-de-variable" class="level3">
+<h3 class="anchored" data-anchor-id="definir-transformadores-tf-idf-por-tipo-de-variable">2. Definir transformadores TF-IDF por tipo de variable</h3>
+<section id="preparacion-de-columnas-de-texto-para-el-ml" class="level4">
+<h4 class="anchored" data-anchor-id="preparacion-de-columnas-de-texto-para-el-ml">preparacion de columnas de texto para el ML</h4>
+<div id="fb41237b" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>text_transformer <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'tfidf'</span>, TfidfVectorizer(max_features<span class="op">=</span><span class="dv">2000</span>, ngram_range<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">2</span>))),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reduce dimensionality of TF-IDF to obtain a dense, lower-dimensional representation</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'svd'</span>, TruncatedSVD(n_components<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorización de variables OneHotEncoder</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>cat_transformer <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return dense output so downstream resamplers (SMOTE) can operate</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'onehot'</span>, OneHotEncoder(handle_unknown<span class="op">=</span><span class="st">'ignore'</span>, sparse_output<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Escalamiento de variables numéricas</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>num_transformer <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scaler'</span>, StandardScaler())</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="combinar-transformadores-para-la-nueva-database-en-un-columntransformer-para-modelacións" class="level3">
+<h3 class="anchored" data-anchor-id="combinar-transformadores-para-la-nueva-database-en-un-columntransformer-para-modelacións">Combinar transformadores para la nueva database en un ColumnTransformer para modelacións</h3>
+<div id="687bc111" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(transformers<span class="op">=</span>[</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'text'</span>, text_transformer, text_col),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'cat'</span>, cat_transformer, cat_cols),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'num'</span>, num_transformer, num_cols)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear pipeline completo (solo preprocesamiento)</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>preprocessing_pipeline <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'preprocessor'</span>, preprocessor)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="f39a8ec2" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicar pipeline de preprocesamiento</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Ejecutando preprocesamiento..."</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Avoid data leakage: split *before* fitting vectorizers / scalers</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create binary target for classification (threshold can be adjusted)</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>umbral <span class="op">=</span> <span class="fl">0.5</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'toxicity_class'</span>] <span class="op">=</span> df[<span class="st">'toxicity_score'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="dv">1</span> <span class="cf">if</span> x <span class="op">&gt;=</span> umbral <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare feature dataframe (drop target columns)</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>X_df <span class="op">=</span> df.drop(columns<span class="op">=</span>[target, <span class="st">'toxicity_class'</span>], errors<span class="op">=</span><span class="st">'ignore'</span>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'toxicity_class'</span>].values</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Split raw dataframes (preprocessing is fit only on training data)</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>X_train_df, X_test_df, y_train, y_test <span class="op">=</span> train_test_split(X_df, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>y)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit preprocessors on training data and transform both train and test</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> preprocessing_pipeline.fit_transform(X_train_df)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> preprocessing_pipeline.transform(X_test_df)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ Preprocesamiento completado."</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dimensiones X_train:"</span>, <span class="bu">getattr</span>(X_train, <span class="st">'shape'</span>, <span class="va">None</span>))</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dimensiones X_test:"</span>, <span class="bu">getattr</span>(X_test, <span class="st">'shape'</span>, <span class="va">None</span>))</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dimensiones de y_train:"</span>, <span class="bu">getattr</span>(y_train, <span class="st">'shape'</span>, <span class="va">None</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Ejecutando preprocesamiento...
+✅ Preprocesamiento completado.
+Dimensiones X_train: (93, 790)
+Dimensiones X_test: (24, 790)
+Dimensiones de y_train: (93,)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="clasificacion-supervisada-rf" class="level1">
+<h1>CLASIFICACION SUPERVISADA (RF)</h1>
+<section id="nuevamente-stadísticas-de-toxicity_score" class="level3">
+<h3 class="anchored" data-anchor-id="nuevamente-stadísticas-de-toxicity_score">1. Nuevamente stadísticas de toxicity_score</h3>
+<div id="9282408c" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Estadísticas de toxicity_score ==="</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'toxicity_score'</span>].describe())</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>sns.histplot(df[<span class="st">'toxicity_score'</span>], bins<span class="op">=</span><span class="dv">20</span>, kde<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribución de toxicity_score"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Toxicity Score"</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frecuencia"</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== Estadísticas de toxicity_score ===
+count    117.000000
+mean       0.158777
+std        0.210333
+min        0.003032
+25%        0.005372
+50%        0.046121
+75%        0.246033
+max        0.920998
+Name: toxicity_score, dtype: float64</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-18-output-2.png" width="585" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="definición-umbrales" class="level3">
+<h3 class="anchored" data-anchor-id="definición-umbrales">2. Definición umbrales</h3>
+<p>Definir variable categórica Ejemplo simple: binaria 0 = No tóxico (toxicity_score &lt; 0.5) 1 = Tóxico (toxicity_score &gt;= 0.5) Se puede ajustar a multiclase si se desea</p>
+<div id="c69c4e50" class="cell" data-execution_count="18">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The binary target (`toxicity_class`) was created earlier during preprocessing.</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We already split the raw dataframe and applied preprocessing to obtain</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `X_train`, `X_test`, `y_train`, `y_test`.</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Distribución de clases:"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'toxicity_class'</span>].value_counts())</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># At this point we will use the precomputed `X_train`, `X_test`, `y_train`, `y_test`</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># produced in the preprocessing step above. Avoid re-splitting or reusing</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># variables that are no longer defined (e.g., `X`).</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Distribución de clases:
+toxicity_class
+0    106
+1     11
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="división-del-dataset-en-entrenamiento-y-prueba" class="level3">
+<h3 class="anchored" data-anchor-id="división-del-dataset-en-entrenamiento-y-prueba">3. División del dataset en entrenamiento y prueba</h3>
+<div id="fbceb48e" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The dataset has already been split earlier (before preprocessing) into</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># `X_train`, `X_test`, `y_train`, `y_test`. Do not re-split here to avoid</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># overwriting those arrays or causing NameError for `X_raw`/`y_raw`.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="balanceo-de-clases-con-smote" class="level3">
+<h3 class="anchored" data-anchor-id="balanceo-de-clases-con-smote">4. Balanceo de clases con SMOTE</h3>
+<div id="7c913068" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>smote <span class="op">=</span> SMOTE(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>X_train_bal, y_train_bal <span class="op">=</span> smote.fit_resample(X_train, y_train)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Distribución después de SMOTE:"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.Series(y_train_bal).value_counts())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Distribución después de SMOTE:
+0    84
+1    84
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="entrenamiento-del-modelo-random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="entrenamiento-del-modelo-random-forest">5. Entrenamiento del modelo Random Forest</h3>
+<div id="191ea598" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>rf_clf <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">200</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>rf_clf.fit(X_train_bal, y_train_bal)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: #000;
+  --sklearn-color-text-muted: #666;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: start;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+#sk-container-id-1 label.sk-toggleable__label .caption {
+  font-size: 0.6rem;
+  font-weight: lighter;
+  color: var(--sklearn-color-text-muted);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  display: none;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 0.5em;
+  text-align: center;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+
+.estimator-table summary {
+    padding: .5rem;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+.estimator-table details[open] {
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    padding-bottom: 0.3rem;
+}
+
+.estimator-table .parameters-table {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.estimator-table .parameters-table tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+.estimator-table .parameters-table tr:nth-child(even) {
+    background-color: #f6f6f6;
+}
+
+.estimator-table .parameters-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+.estimator-table table td {
+    border: 1px solid rgba(106, 105, 104, 0.232);
+}
+
+.user-set td {
+    color:rgb(255, 94, 0);
+    text-align: left;
+}
+
+.user-set td.value pre {
+    color:rgb(255, 94, 0) !important;
+    background-color: transparent !important;
+}
+
+.default td {
+    color: black;
+    text-align: left;
+}
+
+.user-set td i,
+.default td i {
+    color: black;
+}
+
+.copy-paste-icon {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTIwOCAwTDMzMi4xIDBjMTIuNyAwIDI0LjkgNS4xIDMzLjkgMTQuMWw2Ny45IDY3LjljOSA5IDE0LjEgMjEuMiAxNC4xIDMzLjlMNDQ4IDMzNmMwIDI2LjUtMjEuNSA0OC00OCA0OGwtMTkyIDBjLTI2LjUgMC00OC0yMS41LTQ4LTQ4bDAtMjg4YzAtMjYuNSAyMS41LTQ4IDQ4LTQ4ek00OCAxMjhsODAgMCAwIDY0LTY0IDAgMCAyNTYgMTkyIDAgMC0zMiA2NCAwIDAgNDhjMCAyNi41LTIxLjUgNDgtNDggNDhMNDggNTEyYy0yNi41IDAtNDgtMjEuNS00OC00OEwwIDE3NmMwLTI2LjUgMjEuNS00OCA0OC00OHoiLz48L3N2Zz4=);
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    background-position: 0;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestClassifier(n_estimators=200, random_state=42)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked=""><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>RandomForestClassifier</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.7/modules/generated/sklearn.ensemble.RandomForestClassifier.html">?<span>Documentation for RandomForestClassifier</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted" data-param-prefix="">
+        <div class="estimator-table">
+            <details>
+                <summary>Parameters</summary>
+                
+<table class="parameters-table caption-top table table-sm table-striped small">
+<tbody>
+<tr class="user-set odd">
+<td><em></em></td>
+<td class="param">n_estimators&nbsp;</td>
+<td class="value">200</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">criterion&nbsp;</td>
+<td class="value">'gini'</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">max_depth&nbsp;</td>
+<td class="value">None</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">min_samples_split&nbsp;</td>
+<td class="value">2</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">min_samples_leaf&nbsp;</td>
+<td class="value">1</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">min_weight_fraction_leaf&nbsp;</td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">max_features&nbsp;</td>
+<td class="value">'sqrt'</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">max_leaf_nodes&nbsp;</td>
+<td class="value">None</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">min_impurity_decrease&nbsp;</td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">bootstrap&nbsp;</td>
+<td class="value">True</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">oob_score&nbsp;</td>
+<td class="value">False</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">n_jobs&nbsp;</td>
+<td class="value">None</td>
+</tr>
+<tr class="user-set odd">
+<td><em></em></td>
+<td class="param">random_state&nbsp;</td>
+<td class="value">42</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">verbose&nbsp;</td>
+<td class="value">0</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">warm_start&nbsp;</td>
+<td class="value">False</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">class_weight&nbsp;</td>
+<td class="value">None</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">ccp_alpha&nbsp;</td>
+<td class="value">0.0</td>
+</tr>
+<tr class="default even">
+<td><em></em></td>
+<td class="param">max_samples&nbsp;</td>
+<td class="value">None</td>
+</tr>
+<tr class="default odd">
+<td><em></em></td>
+<td class="param">monotonic_cst&nbsp;</td>
+<td class="value">None</td>
+</tr>
+</tbody>
+</table>
+
+            </details>
+        </div>
+    </div></div></div></div></div><script>function copyToClipboard(text, element) {
+    // Get the parameter prefix from the closest toggleable content
+    const toggleableContent = element.closest('.sk-toggleable__content');
+    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
+    const fullParamName = paramPrefix ? `${paramPrefix}${text}` : text;
+
+    const originalStyle = element.style;
+    const computedStyle = window.getComputedStyle(element);
+    const originalWidth = computedStyle.width;
+    const originalHTML = element.innerHTML.replace('Copied!', '');
+
+    navigator.clipboard.writeText(fullParamName)
+        .then(() => {
+            element.style.width = originalWidth;
+            element.style.color = 'green';
+            element.innerHTML = "Copied!";
+
+            setTimeout(() => {
+                element.innerHTML = originalHTML;
+                element.style = originalStyle;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error('Failed to copy:', err);
+            element.style.color = 'red';
+            element.innerHTML = "Failed!";
+            setTimeout(() => {
+                element.innerHTML = originalHTML;
+                element.style = originalStyle;
+            }, 2000);
+        });
+    return false;
+}
+
+document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
+    const toggleableContent = element.closest('.sk-toggleable__content');
+    const paramPrefix = toggleableContent ? toggleableContent.dataset.paramPrefix : '';
+    const paramName = element.parentElement.nextElementSibling.textContent.trim();
+    const fullParamName = paramPrefix ? `${paramPrefix}${paramName}` : paramName;
+
+    element.setAttribute('title', fullParamName);
+});
+</script>
+</div>
+</div>
+</section>
+<section id="predicción" class="level3">
+<h3 class="anchored" data-anchor-id="predicción">6. Predicción</h3>
+<div id="e17a3411" class="cell" data-execution_count="22">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_clf.predict(X_test)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>y_proba <span class="op">=</span> rf_clf.predict_proba(X_test)[:,<span class="dv">1</span>]  <span class="co"># probabilidades para ROC</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="evaluación-del-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="evaluación-del-modelo">7. Evaluación del modelo</h3>
+<div id="f4708369" class="cell" data-execution_count="23">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>prec <span class="op">=</span> precision_score(y_test, y_pred)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>rec <span class="op">=</span> recall_score(y_test, y_pred)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>f1 <span class="op">=</span> f1_score(y_test, y_pred)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>roc_auc <span class="op">=</span> roc_auc_score(y_test, y_proba)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Métricas de evaluación ==="</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Accuracy:  </span><span class="sc">{</span>acc<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precision: </span><span class="sc">{</span>prec<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recall:    </span><span class="sc">{</span>rec<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"F1 Score:  </span><span class="sc">{</span>f1<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"ROC-AUC:   </span><span class="sc">{</span>roc_auc<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== Métricas de evaluación ===
+Accuracy:  0.917
+Precision: 0.000
+Recall:    0.000
+F1 Score:  0.000
+ROC-AUC:   0.739</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>d:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\sklearn\metrics\_classification.py:1731: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 due to no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, f"{metric.capitalize()} is", result.shape[0])</code></pre>
+</div>
+</div>
+<div id="1924c1c0" class="cell" data-execution_count="24">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm, display_labels<span class="op">=</span>[<span class="st">'No Tóxico'</span>,<span class="st">'Tóxico'</span>])</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>disp.plot(cmap<span class="op">=</span>plt.cm.Blues)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Matriz de Confusión - Random Forest"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-25-output-1.png" width="563" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cab93d08" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>RocCurveDisplay.from_estimator(rf_clf, X_test, y_test)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Curva ROC - Random Forest"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-26-output-1.png" width="445" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>
