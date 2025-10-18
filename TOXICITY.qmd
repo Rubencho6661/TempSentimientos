@@ -29,6 +29,8 @@ from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import TruncatedSVD
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 from imblearn.over_sampling import SMOTE
 import re, string, nltk
 from nltk.corpus import stopwords
@@ -270,11 +272,7 @@ print("Dimensiones de y_train:", getattr(y_train, 'shape', None))
 #plt.show()
 ```
 
-### 2. Definición umbrales
-# Definir variable categórica
-# Ejemplo simple: binaria
-# 
-# Se puede ajustar a multiclase si se desea
+### 2. Definición clases
 ```{python}
 ## Las variabl target (`toxicity_class`) fue creada anteriormente
 ## Ya se dicidio SPLIT el dataframe `X_train`, `X_test`, `y_train`, `y_test`.
@@ -336,30 +334,38 @@ plt.title("Curva ROC - Random Forest")
 plt.show()
 ```
 
-# PROBLEMA DE REGRESIÓN
 
+# PROBLEMA DE REGRESIÓN
 ```{python}
-# 2️⃣ Dividir datos en entrenamiento y prueba (80%-20%)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+y = df['toxicity_score'].values
+# Seleccionar variables numéricas explicativas (excepto la dependiente)
+X_df = df[num_vars].drop(columns=['toxicity_score'])
+# 1. Dividir datos en entrenamiento y prueba (80%-20%)
+X_train, X_test, y_train, y_test = train_test_split(X_df, y, test_size=0.2, random_state=42)
 ```
 
-# 3️⃣ Entrenamiento del modelo de regresión
+# Normalización de variables numéricas
+```{python}
+# Inicializar el escalador
+scaler = StandardScaler()
 
+# Ajustar el escalador solo con los datos de entrenamiento y transformar ambos conjuntos
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+```
+
+# 2. Entrenamiento del modelo de regresión
 ```{python}
 rf_reg = RandomForestRegressor(n_estimators=200, random_state=42)
-rf_reg.fit(X_train, y_train)
+rf_reg.fit(X_train_scaled, y_train)
 ```
 
-
-# 4️⃣ Predicciones
-
+# 3. Predicciones
 ```{python}
-y_pred = rf_reg.predict(X_test)
+y_pred = rf_reg.predict(X_test_scaled)
 ```
 
-
-# 5️⃣ Evaluación del modelo
-
+# 4. Evaluación del modelo
 ```{python}
 mae = mean_absolute_error(y_test, y_pred)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
@@ -371,9 +377,7 @@ print(f"RMSE: {rmse:.4f}")
 print(f"R²: {r2:.4f}")
 ```
 
-
-# 6️⃣ Visualización de resultados
-
+# 5. Visualización de resultados
 ```{python}
 # Dispersión real vs predicho
 plt.figure(figsize=(8,6))
@@ -395,7 +399,6 @@ plt.xlabel("Valores predichos")
 plt.ylabel("Errores residuales")
 plt.title("Errores residuales vs Valores predichos")
 plt.show()
-
 ```
 
 ```{python}
@@ -406,4 +409,74 @@ plt.xlabel("Error")
 plt.ylabel("Frecuencia")
 plt.title("Distribución de errores residuales")
 plt.show()
+```
+
+
+# AGRUPAMIENTO (CLUSTERING)
+
+```{python}
+# Seleccionar variables numéricas explicativas
+#X_df = df[num_vars].drop(columns=['toxicity_score'])
+X_cluster = df.select_dtypes(include=np.number).drop(columns=['toxicity_score'])
+```
+
+### 2. Normalizar los datos
+```{python}
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_cluster)
+```
+
+### 3. Determinar número óptimo de clusters (método del codo)
+```{python}
+inertia = []
+K = range(2, 10)
+for k in K:
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+    kmeans.fit(X_scaled)
+    inertia.append(kmeans.inertia_)
+
+plt.figure(figsize=(8,5))
+plt.plot(K, inertia, 'bo-')
+plt.xlabel('Número de clusters (k)')
+plt.ylabel('Inercia (Suma de distancias cuadradas)')
+plt.title('Método del Codo para determinar K óptimo')
+plt.show()
+```
+### 4. Entrenar K-Means con el número de clusters elegido ---
+```{python}
+# elección del número apropiado de clusters observando el gráfico anterior
+kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+df['cluster'] = kmeans.fit_predict(X_scaled)
+```
+### 5. Reducción de dimensionalidad para visualización (PCA a 2D) ---
+```{python}
+pca = PCA(n_components=2, random_state=42)
+pca_result = pca.fit_transform(X_scaled)
+df['PCA1'] = pca_result[:, 0]
+df['PCA2'] = pca_result[:, 1]
+```
+
+### 6. Visualizar los clusters ---
+```{python}
+plt.figure(figsize=(8,6))
+sns.scatterplot(data=df, x='PCA1', y='PCA2', hue='cluster', palette='Set2', s=60, alpha=0.8)
+plt.title('Visualización de Clusters (PCA 2D)')
+plt.legend(title='Cluster')
+plt.show()
+
+```
+
+### 7. Comparar los clusters con las categorías de toxicidad ---
+```{python}
+if 'toxicity_class' in df.columns:
+    ct = pd.crosstab(df['cluster'], df['toxicity_class'])
+    print("=== Comparación entre Clusters y Niveles de Toxicidad ===")
+    print(ct)
+
+    plt.figure(figsize=(7,5))
+    sns.heatmap(ct, annot=True, cmap='coolwarm', fmt='d')
+    plt.title('Relación entre Clusters y Niveles de Toxicidad')
+    plt.ylabel('Cluster K-Means')
+    plt.xlabel('Nivel de Toxicidad')
+    plt.show()
 ```
