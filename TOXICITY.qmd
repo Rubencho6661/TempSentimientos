@@ -140,6 +140,15 @@ for col in x:
     plt.show()
 ```
 
+# HALLAZGOS
+1. La variable toxicity_score está fuertemente sesgada hacia valores bajos (cercanos a 0).
+La mayoría de los tweets tienen puntuaciones muy pequeñas de toxicidad, lo que significa que el conjunto de datos contiene muchos mensajes no tóxicos y agresivos.
+
+2. El mapa de correlación mostró que la mayoría de las variables numéricas tienen correlaciones bajas o cercanas a 0 con toxicity_score, así el comportamiento social no predice bien la toxicidad del mensaje.
+
+3. Durante el preprocesamiento del texto, se observó que muchos tweets contenían palabras repetidas, menciones, hashtags y URLs, que fueron eliminados o normalizados.
+Así, una buena parte del texto se compone de comentarios comunes.
+
 
 ```{python}
 print("✅ EDA completo.")
