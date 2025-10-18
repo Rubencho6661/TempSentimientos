@@ -122,7 +122,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TOXICITY.html">Sentimiento Analysis</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TOXICITY.html">Toxicity Analysis</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -236,7 +236,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./TOXICITY.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Sentimiento Analysis</span></a>
+ <span class="menu-text">Toxicity Analysis</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -333,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="importación-de-librerías" class="level1">
 <h1>Importación de librerías</h1>
-<div id="a6352728" class="cell" data-execution_count="1">
+<div id="d4e35af1" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -396,7 +396,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>ANÁLISIS EXPLORATORIO DE DATOS (EDA)</h1>
 <section id="carga-y-exploración-de-datos" class="level3">
 <h3 class="anchored" data-anchor-id="carga-y-exploración-de-datos">1. Carga y exploración de datos</h3>
-<div id="d12fc8df" class="cell" data-execution_count="2">
+<div id="89c5a42a" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carga y creación de sentiment_class</span></span>
@@ -567,7 +567,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="limpieza-de-caracteristicas-que-no-aportan" class="level3">
 <h3 class="anchored" data-anchor-id="limpieza-de-caracteristicas-que-no-aportan">2. Limpieza de caracteristicas que no aportan</h3>
-<div id="936f3b45" class="cell" data-execution_count="3">
+<div id="5c5b5fd3" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantener solo las columnas necesarias</span></span>
@@ -577,7 +577,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="tipo-y-cantidad-de-variables-numéricas-categóricas-texto." class="level3">
 <h3 class="anchored" data-anchor-id="tipo-y-cantidad-de-variables-numéricas-categóricas-texto.">3. Tipo y cantidad de variables (numéricas, categóricas, texto).</h3>
-<div id="4e6b9da6" class="cell" data-execution_count="4">
+<div id="c08b7e84" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset -&gt;"</span>)</span>
@@ -711,7 +711,7 @@ Variables de texto: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName'
 </section>
 <section id="estadísticas-descriptivas" class="level3">
 <h3 class="anchored" data-anchor-id="estadísticas-descriptivas">4.Estadísticas descriptivas</h3>
-<div id="2b3825a8" class="cell" data-execution_count="5">
+<div id="d2c7428c" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Estadísticas numéricas"</span>)</span>
@@ -744,7 +744,7 @@ max        684.000000        0.939145  </code></pre>
 </section>
 <section id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="level3">
 <h3 class="anchored" data-anchor-id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato">5. Visualizaciones apropiadas de acuerdo al tipo de dato</h3>
-<div id="44860526" class="cell" data-execution_count="6">
+<div id="71045ef6" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas y boxplots para variables numéricas</span></span>
@@ -847,7 +847,7 @@ max        684.000000        0.939145  </code></pre>
 </section>
 <section id="correlaciones-entre-variables-numericas" class="level3">
 <h3 class="anchored" data-anchor-id="correlaciones-entre-variables-numericas">Correlaciones entre variables numericas</h3>
-<div id="71de2f94" class="cell" data-execution_count="7">
+<div id="38e83654" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar variable dependiente</span></span>
@@ -945,7 +945,7 @@ max        684.000000        0.939145  </code></pre>
 <li><p>El mapa de correlación mostró que la mayoría de las variables numéricas tienen correlaciones bajas o cercanas a 0 con toxicity_score, así el comportamiento social no predice bien la toxicidad del mensaje.</p></li>
 <li><p>Durante el preprocesamiento del texto, se observó que muchos tweets contenían palabras repetidas, menciones, hashtags y URLs, que fueron eliminados o normalizados. Así, una buena parte del texto se compone de comentarios comunes.</p></li>
 </ol>
-<div id="2645b13c" class="cell" data-execution_count="8">
+<div id="1e1409a7" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ EDA completo."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -959,7 +959,7 @@ max        684.000000        0.939145  </code></pre>
 <h1>PROCESAMIENTO Y CODIFICACIÓN</h1>
 <section id="limpieza-del-texto-y-metadatos" class="level3">
 <h3 class="anchored" data-anchor-id="limpieza-del-texto-y-metadatos">1. Limpieza del texto y metadatos</h3>
-<div id="2b776ae1" class="cell" data-execution_count="9">
+<div id="d9d41872" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
@@ -980,7 +980,7 @@ max        684.000000        0.939145  </code></pre>
 </section>
 <section id="detección-de-valores-nulos-duplicados-o-atípicos" class="level3">
 <h3 class="anchored" data-anchor-id="detección-de-valores-nulos-duplicados-o-atípicos">2. Detección de valores nulos, duplicados o atípicos</h3>
-<div id="a853c641" class="cell" data-execution_count="10">
+<div id="b0d6a83e" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Valores nulos por columna"</span>)</span>
@@ -1018,7 +1018,7 @@ Filas duplicadas
 0</code></pre>
 </div>
 </div>
-<div id="d3004eaf" class="cell" data-execution_count="11">
+<div id="2a606583" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar filas nulas en columnas críticas</span></span>
@@ -1062,7 +1062,7 @@ Filas duplicadas
 </section>
 <section id="correlaciones-directas-con-toxicity_score-para-saber-cuáles-variables-influyen-más" class="level3">
 <h3 class="anchored" data-anchor-id="correlaciones-directas-con-toxicity_score-para-saber-cuáles-variables-influyen-más">3. Correlaciones directas con toxicity_score para saber cuáles variables influyen más</h3>
-<div id="400d4f18" class="cell" data-execution_count="12">
+<div id="808dc602" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar solo variables numéricas (incluyendo la dependiente)</span></span>
@@ -1103,7 +1103,7 @@ Name: toxicity_score, dtype: float64</code></pre>
 </section>
 <section id="identificar-tipos-de-variables" class="level3">
 <h3 class="anchored" data-anchor-id="identificar-tipos-de-variables">4. Identificar tipos de variables</h3>
-<div id="4ed0a972" class="cell" data-execution_count="13">
+<div id="8292384f" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> <span class="st">'toxicity_score'</span></span>
@@ -1126,7 +1126,7 @@ Variable de texto: texto_limpio</code></pre>
 <h3 class="anchored" data-anchor-id="definir-transformadores-tf-idf-por-tipo-de-variable">5. Definir transformadores TF-IDF por tipo de variable</h3>
 <section id="preparacion-de-columnas-de-texto-para-el-ml" class="level4">
 <h4 class="anchored" data-anchor-id="preparacion-de-columnas-de-texto-para-el-ml">preparacion de columnas de texto para el ML</h4>
-<div id="0926ef37" class="cell" data-execution_count="14">
+<div id="ea546718" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>text_transformer <span class="op">=</span> Pipeline(steps<span class="op">=</span>[</span>
@@ -1150,7 +1150,7 @@ Variable de texto: texto_limpio</code></pre>
 </section>
 <section id="combinar-transformadores-para-las-variables-en-un-columntransformer-para-modelacións" class="level4">
 <h4 class="anchored" data-anchor-id="combinar-transformadores-para-las-variables-en-un-columntransformer-para-modelacións">Combinar transformadores para las variables en un ColumnTransformer para modelacións</h4>
-<div id="8d2479b6" class="cell" data-execution_count="15">
+<div id="5b6196fd" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>preprocessor <span class="op">=</span> ColumnTransformer(transformers<span class="op">=</span>[</span>
@@ -1168,7 +1168,7 @@ Variable de texto: texto_limpio</code></pre>
 </section>
 <section id="aplicar-pipeline-de-preprocesamiento" class="level4">
 <h4 class="anchored" data-anchor-id="aplicar-pipeline-de-preprocesamiento">Aplicar pipeline de preprocesamiento</h4>
-<div id="58f49d9c" class="cell" data-execution_count="16">
+<div id="d954a694" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Ejecutando preprocesamiento..."</span>)</span>
@@ -1213,7 +1213,7 @@ Dimensiones de y_train: (1069,)</code></pre>
 <p>Se aplicó balanceo de clases mediante SMOTE, ya que el dataset estaba desbalanceado. El modelo utilizado fue Random Forest Classifier. Se evaluó con Accuracy, Precision, Recall, F1-score y ROC-AUC. Se generaron matriz de confusión y curva ROC</p>
 <section id="nuevamente-stadísticas-de-toxicity_score" class="level3">
 <h3 class="anchored" data-anchor-id="nuevamente-stadísticas-de-toxicity_score">1. Nuevamente stadísticas de toxicity_score</h3>
-<div id="eaf03aba" class="cell" data-execution_count="17">
+<div id="7071fb42" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#print("\n=== Estadísticas de toxicity_score ===")</span></span>
@@ -1230,7 +1230,7 @@ Dimensiones de y_train: (1069,)</code></pre>
 </section>
 <section id="definición-clases" class="level3">
 <h3 class="anchored" data-anchor-id="definición-clases">2. Definición clases</h3>
-<div id="101bec1a" class="cell" data-execution_count="18">
+<div id="55a0344d" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Las variabl target (`toxicity_class`) fue creada anteriormente</span></span>
@@ -1252,7 +1252,7 @@ Name: count, dtype: int64</code></pre>
 <section id="balanceo-de-clases-con-smote" class="level3">
 <h3 class="anchored" data-anchor-id="balanceo-de-clases-con-smote">3. Balanceo de clases con SMOTE</h3>
 <p>The dataset has already been split earlier (before preprocessing) into <code>X_train</code>, <code>X_test</code>, <code>y_train</code>, <code>y_test</code>. Do not re-split here to avoid overwriting those arrays or causing NameError for <code>X_raw</code>/<code>y_raw</code>.</p>
-<div id="667afdee" class="cell" data-execution_count="19">
+<div id="a38ee641" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>smote <span class="op">=</span> SMOTE(random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -1272,7 +1272,7 @@ Name: count, dtype: int64</code></pre>
 </section>
 <section id="entrenamiento-del-modelo-random-forest" class="level3">
 <h3 class="anchored" data-anchor-id="entrenamiento-del-modelo-random-forest">4. Entrenamiento del modelo Random Forest</h3>
-<div id="a3acadd6" class="cell" data-execution_count="20">
+<div id="d85a4a63" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>rf_clf <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">200</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -1911,7 +1911,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="predicción" class="level3">
 <h3 class="anchored" data-anchor-id="predicción">5. Predicción</h3>
-<div id="0e763a54" class="cell" data-execution_count="21">
+<div id="e64c8cf7" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_clf.predict(X_test)</span>
@@ -1921,7 +1921,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="evaluación-del-modelo" class="level3">
 <h3 class="anchored" data-anchor-id="evaluación-del-modelo">6. Evaluación del modelo</h3>
-<div id="b056d9c9" class="cell" data-execution_count="22">
+<div id="b13d5fce" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
@@ -1946,7 +1946,7 @@ F1 Score:  0.364
 ROC-AUC:   0.810</code></pre>
 </div>
 </div>
-<div id="4b1ff61b" class="cell" data-execution_count="23">
+<div id="ca3b2544" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
@@ -1963,7 +1963,7 @@ ROC-AUC:   0.810</code></pre>
 </div>
 </div>
 </div>
-<div id="c23d5d1f" class="cell" data-execution_count="24">
+<div id="9cf74981" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>RocCurveDisplay.from_estimator(rf_clf, X_test, y_test)</span>
@@ -1987,7 +1987,7 @@ ROC-AUC:   0.810</code></pre>
 <section id="problema-de-regresión" class="level1">
 <h1>PROBLEMA DE REGRESIÓN</h1>
 <p>Predecir el valor continuo del toxicity_score (variable dependiente) a partir de variables numéricas explicativas.</p>
-<div id="6991a45a" class="cell" data-execution_count="25">
+<div id="2d6cf2ae" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">'toxicity_score'</span>].values</span>
@@ -2000,7 +2000,7 @@ ROC-AUC:   0.810</code></pre>
 </section>
 <section id="normalización-de-variables-numéricas" class="level1">
 <h1>Normalización de variables numéricas</h1>
-<div id="6c9438d5" class="cell" data-execution_count="26">
+<div id="93d5e10f" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inicializar el escalador</span></span>
@@ -2014,7 +2014,7 @@ ROC-AUC:   0.810</code></pre>
 </section>
 <section id="entrenamiento-del-modelo-de-regresión" class="level1">
 <h1>2. Entrenamiento del modelo de regresión</h1>
-<div id="c0d3611b" class="cell" data-execution_count="27">
+<div id="4da822b5" class="cell" data-execution_count="27">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>rf_reg <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">200</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -2648,7 +2648,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="predicciones" class="level1">
 <h1>3. Predicciones</h1>
-<div id="2c3c277c" class="cell" data-execution_count="28">
+<div id="4dab735a" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_reg.predict(X_test_scaled)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2657,7 +2657,7 @@ document.querySelectorAll('.fa-regular.fa-copy').forEach(function(element) {
 </section>
 <section id="evaluación-del-modelo-1" class="level1">
 <h1>4. Evaluación del modelo</h1>
-<div id="c71b0311" class="cell" data-execution_count="29">
+<div id="9856f0ec" class="cell" data-execution_count="29">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>mae <span class="op">=</span> mean_absolute_error(y_test, y_pred)</span>
@@ -2679,7 +2679,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="visualización-de-resultados" class="level1">
 <h1>5. Visualización de resultados</h1>
-<div id="b1e9f6e9" class="cell" data-execution_count="30">
+<div id="c2a86bac" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dispersión real vs predicho</span></span>
@@ -2699,7 +2699,7 @@ R²: 0.0064</code></pre>
 </div>
 </div>
 </div>
-<div id="474fa04d" class="cell" data-execution_count="31">
+<div id="d960312b" class="cell" data-execution_count="31">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Errores residuales</span></span>
@@ -2720,7 +2720,7 @@ R²: 0.0064</code></pre>
 </div>
 </div>
 </div>
-<div id="dc17418b" class="cell" data-execution_count="32">
+<div id="a132fbd5" class="cell" data-execution_count="32">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de errores residuales</span></span>
@@ -2747,7 +2747,7 @@ R²: 0.0064</code></pre>
 <section id="agrupamiento-clustering" class="level1">
 <h1>AGRUPAMIENTO (CLUSTERING)</h1>
 <p>Objetivo: Agrupar mensajes por similitud de características numéricas. los datos fueron escalados con StandardScaler y con el método del codo y se seleccionó k = 3 clusters</p>
-<div id="5260e0ea" class="cell" data-execution_count="33">
+<div id="0b8a6aa1" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleccionar variables numéricas explicativas</span></span>
@@ -2757,7 +2757,7 @@ R²: 0.0064</code></pre>
 </div>
 <section id="normalizar-los-datos" class="level3">
 <h3 class="anchored" data-anchor-id="normalizar-los-datos">2. Normalizar los datos</h3>
-<div id="0a8b053c" class="cell" data-execution_count="34">
+<div id="cadacd0d" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
@@ -2767,7 +2767,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="determinar-número-óptimo-de-clusters-método-del-codo" class="level3">
 <h3 class="anchored" data-anchor-id="determinar-número-óptimo-de-clusters-método-del-codo">3. Determinar número óptimo de clusters (método del codo)</h3>
-<div id="e8ebf4d5" class="cell" data-execution_count="35">
+<div id="0204109a" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>inertia <span class="op">=</span> []</span>
@@ -2795,7 +2795,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="entrenar-k-means-con-el-número-de-clusters-elegido" class="level3">
 <h3 class="anchored" data-anchor-id="entrenar-k-means-con-el-número-de-clusters-elegido">4. Entrenar K-Means con el número de clusters elegido —</h3>
-<div id="f5edf936" class="cell" data-execution_count="36">
+<div id="d9678fee" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># elección del número apropiado de clusters observando el gráfico anterior</span></span>
@@ -2806,7 +2806,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="reducción-de-dimensionalidad-para-visualización-pca-a-2d" class="level3">
 <h3 class="anchored" data-anchor-id="reducción-de-dimensionalidad-para-visualización-pca-a-2d">5. Reducción de dimensionalidad para visualización (PCA a 2D) —</h3>
-<div id="ed039fbc" class="cell" data-execution_count="37">
+<div id="537648a0" class="cell" data-execution_count="37">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -2818,7 +2818,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="visualizar-los-clusters" class="level3">
 <h3 class="anchored" data-anchor-id="visualizar-los-clusters">6. Visualizar los clusters —</h3>
-<div id="58405850" class="cell" data-execution_count="38">
+<div id="4614b389" class="cell" data-execution_count="38">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
@@ -2838,7 +2838,7 @@ R²: 0.0064</code></pre>
 </section>
 <section id="comparar-los-clusters-con-las-categorías-de-toxicidad" class="level3">
 <h3 class="anchored" data-anchor-id="comparar-los-clusters-con-las-categorías-de-toxicidad">7. Comparar los clusters con las categorías de toxicidad —</h3>
-<div id="ab5f9ffa" class="cell" data-execution_count="39">
+<div id="a49798be" class="cell" data-execution_count="39">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'toxicity_class'</span> <span class="kw">in</span> df.columns:</span>
