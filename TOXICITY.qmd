@@ -1,0 +1,199 @@
+---
+title: "Predicción del Ánimo de Usuarios"
+#code-fold: false
+---
+
+# Importación de librerías
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import pearsonr
+from wordcloud import WordCloud, STOPWORDS
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.utils import resample
+import nltk
+import re
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+# Descargar recursos necesarios
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+```
+
+### ANÁLISIS EXPLORATORIO DE DATOS (EDA)
+# 1. Carga y exploración de datos
+```{python}
+# 1. Carga y creación de sentiment_class
+url = "https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/1500_tweets_con_toxicity.csv"
+df = pd.read_csv(url)
+
+df.head()
+```
+
+# 2. Limpieza de caracteristicas que no aportan
+```{python}
+# Mantener solo las columnas necesarias
+df = df.drop(["tweetId", "authorId", "authorProfilePic", "conversationId", "inReplyToId", "sentiment_polarity"], axis=1)
+```
+
+```{python}
+print("Dataset ->")
+print(df.head())
+print("\nInformación general ->")
+print(df.info())
+print("\nTipos de variables ->")
+print(df.dtypes)
+
+num_vars = df.select_dtypes(include=np.number).columns.tolist()
+print(f"\nVariables numéricas: {num_vars}")
+cat_vars = df.select_dtypes(include='object').columns.tolist()
+print(f"Variables categóricas: {cat_vars}")
+text_vars = [col for col in cat_vars if col not in ['usuario', 'sentimiento']]  
+print(f"Variables de texto: {text_vars}")
+```
+
+# 3.Estadísticas descriptivas
+```{python}
+
+print("\n=== Estadísticas numéricas ===")
+print(df[num_vars].describe())
+```
+
+# 4. Distribución de la variable toxicity_score antes de remover nulos
+```{python}
+
+plt.figure()
+sns.histplot(df['toxicity_score'], bins=40, kde=True, color='grey')
+plt.title("Distribución de toxicity_score")
+plt.xlabel("Toxicity Score")
+plt.ylabel("Frecuencia")
+plt.show()
+
+# Boxplot para ver outliers
+plt.figure()
+sns.boxplot(x=df['toxicity_score'], color='orange')
+plt.title("Boxplot de toxicity_score")
+plt.show()
+```
+
+# 5. Detección de valores nulos, duplicados o atípicos
+```{python}
+print("\n=== Valores nulos por columna ===")
+print(df.isnull().sum())
+
+print("\n=== Filas duplicadas ===")
+print(df.duplicated().sum())
+```
+```{python}
+# Eliminar filas nulas en columnas críticas
+df = df.dropna(subset=['replyTo', 'hashtags', 'toxicity_score'])
+```
+```{python}
+print("\n=== Valores nulos por columna ===")
+print(df.isnull().sum())
+
+print("\n=== Filas duplicadas ===")
+print(df.duplicated().sum())
+```
+
+# visualizaciones apropiadas de acuerdo al tipo de dato
+```{python}
+# Histogramas y boxplots para variables numéricas
+for col in num_vars:
+    plt.figure()
+    sns.histplot(df[col], bins=20, kde=True)
+    plt.title(f"Histograma de {col}")
+    plt.show()
+    
+    plt.figure()
+    sns.boxplot(x=df[col])
+    plt.title(f"Boxplot de {col}")
+    plt.show()
+```
+
+
+
+```{python}
+# Gráficos de barras para variables categóricas
+#for col in cat_vars:
+#    plt.figure()
+#    sns.countplot(y=df[col], order=df[col].value_counts().index)
+#    plt.title(f"Distribución de {col}")
+#    plt.show()
+```
+
+```{python}
+# Nube de palabras para variables de texto (ej: tweets)
+#text_column = 'createdAt'  # ajustar según tu dataset
+#all_text = ' '.join(df[text_column].dropna().astype(str))
+#wordcloud = WordCloud(width=800, height=400, background_color='white',
+#                      stopwords=STOPWORDS, max_words=100).generate(all_text)
+#
+#plt.figure(figsize=(15,7))
+#plt.imshow(wordcloud, interpolation='bilinear')
+#plt.axis('off')
+#plt.title("Nube de palabras del texto de tweets")
+#plt.show()
+```
+
+```{python}
+# Gráficos de dispersión si aplica
+## Ejemplo: toxicity_score vs número de comentarios
+#if 'comentarios' in df.columns:
+#    plt.figure()
+#    sns.scatterplot(x='comentarios', y='toxicity_score', data=df)
+#    plt.title("Dispersión: Comentarios vs Toxicity Score")
+#    plt.xlabel("Número de comentarios")
+#    plt.ylabel("Toxicity Score")
+#    plt.show()
+#
+#print("✅ EDA completo.")
+```
+
+```{python}
+# Seleccionar variable dependiente
+y = df['toxicity_score']
+
+# Seleccionar variables numéricas explicativas (excepto la dependiente)
+x = df.select_dtypes(include=np.number).columns.tolist()
+x = [col for col in num_vars if col != 'toxicity_score']
+
+print(f"Variables numéricas explicativas: {num_vars}")
+
+# --- 3️⃣ Calcular matriz de correlación
+corr = df[x + ['toxicity_score']].corr()
+
+# --- 4️⃣ Mostrar mapa de calor de correlaciones
+plt.figure(figsize=(10,6))
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title("Matriz de correlación entre variables numéricas y Toxicidad")
+plt.show()
+
+# --- 5️⃣ Graficar dispersión + línea ajustada + coeficiente de correlación
+for col in x:
+    plt.figure(figsize=(6,4))
+    sns.regplot(
+        data=df, x=col, y='toxicity_score',
+        scatter_kws={'alpha':0.5}, line_kws={'color':'red'}
+    )
+    
+    # Calcular coeficiente de correlación de Pearson
+    r, p = pearsonr(df[col].dropna(), df['toxicity_score'].dropna())
+    
+    plt.title(f"{col} vs Toxicity Score\nr = {r:.2f}, p = {p:.3e}")
+    plt.xlabel(col)
+    plt.ylabel("toxicity_score")
+    plt.tight_layout()
+    plt.show()
+```
+### PROCESAMIENTO Y CODIFICACIÓN
+

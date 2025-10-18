@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.24">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Predicción del Ánimo de Usuarios – Machine Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a35d343c8bdbcb87d3b82ed68e48a46c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TOXICITY.html">Sentimiento Analysis</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="./index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction to ML</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./altair.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introducción a Altair</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploratory Data Analysis (EDA)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./categorical_encoding.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Categorical Encoding</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./categorical_pipeline.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Categorical Pipeline</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Natural Language Processing (NLP)</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ml_text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">NLP Key Concepts</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bagofwords.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bag of Words (BoW)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tfidf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Term-Frequency - Inverse Document Frequency (TF-IDF)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./text_classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Text classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./TOXICITY.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Sentimiento Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TOXICITY.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Predicción del Ánimo de Usuarios</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#importación-de-librerías" id="toc-importación-de-librerías" class="nav-link active" data-scroll-target="#importación-de-librerías">Importación de librerías</a>
+  <ul class="collapse">
+  <li><a href="#análisis-exploratorio-de-datos-eda" id="toc-análisis-exploratorio-de-datos-eda" class="nav-link" data-scroll-target="#análisis-exploratorio-de-datos-eda">ANÁLISIS EXPLORATORIO DE DATOS (EDA)</a></li>
+  </ul></li>
+  <li><a href="#carga-y-exploración-de-datos" id="toc-carga-y-exploración-de-datos" class="nav-link" data-scroll-target="#carga-y-exploración-de-datos">1. Carga y exploración de datos</a></li>
+  <li><a href="#limpieza-de-caracteristicas-que-no-aportan" id="toc-limpieza-de-caracteristicas-que-no-aportan" class="nav-link" data-scroll-target="#limpieza-de-caracteristicas-que-no-aportan">2. Limpieza de caracteristicas que no aportan</a></li>
+  <li><a href="#estadísticas-descriptivas" id="toc-estadísticas-descriptivas" class="nav-link" data-scroll-target="#estadísticas-descriptivas">3.Estadísticas descriptivas</a></li>
+  <li><a href="#distribución-de-la-variable-toxicity_score" id="toc-distribución-de-la-variable-toxicity_score" class="nav-link" data-scroll-target="#distribución-de-la-variable-toxicity_score">4. Distribución de la variable toxicity_score</a></li>
+  <li><a href="#detección-de-valores-nulos-duplicados-o-atípicos" id="toc-detección-de-valores-nulos-duplicados-o-atípicos" class="nav-link" data-scroll-target="#detección-de-valores-nulos-duplicados-o-atípicos">5. Detección de valores nulos, duplicados o atípicos</a></li>
+  <li><a href="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" id="toc-visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="nav-link" data-scroll-target="#visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato">visualizaciones apropiadas de acuerdo al tipo de dato</a>
+  <ul class="collapse">
+  <li><a href="#procesamiento-y-codificación" id="toc-procesamiento-y-codificación" class="nav-link" data-scroll-target="#procesamiento-y-codificación">PROCESAMIENTO Y CODIFICACIÓN</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predicción del Ánimo de Usuarios</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="importación-de-librerías" class="level1">
+<h1>Importación de librerías</h1>
+<div id="e0839c1d" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report, confusion_matrix</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.utils <span class="im">import</span> resample</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> WordNetLemmatizer</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Descargar recursos necesarios</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'omw-1.4'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Downloading package stopwords to
+[nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package omw-1.4 to
+[nltk_data]     C:\Users\User\AppData\Roaming\nltk_data...
+[nltk_data]   Package omw-1.4 is already up-to-date!</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>True</code></pre>
+</div>
+</div>
+<section id="análisis-exploratorio-de-datos-eda" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-exploratorio-de-datos-eda">ANÁLISIS EXPLORATORIO DE DATOS (EDA)</h3>
+</section>
+</section>
+<section id="carga-y-exploración-de-datos" class="level1">
+<h1>1. Carga y exploración de datos</h1>
+<div id="7dfd6183" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Carga y creación de sentiment_class</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/erickedu85/dataset/refs/heads/master/tweets/1500_tweets_con_toxicity.csv"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">tweetId</th>
+<th data-quarto-table-cell-role="th">tweetUrl</th>
+<th data-quarto-table-cell-role="th">content</th>
+<th data-quarto-table-cell-role="th">isReply</th>
+<th data-quarto-table-cell-role="th">replyTo</th>
+<th data-quarto-table-cell-role="th">createdAt</th>
+<th data-quarto-table-cell-role="th">authorId</th>
+<th data-quarto-table-cell-role="th">authorName</th>
+<th data-quarto-table-cell-role="th">authorUsername</th>
+<th data-quarto-table-cell-role="th">authorVerified</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">inReplyToId</th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">time_response</th>
+<th data-quarto-table-cell-role="th">account_age_days</th>
+<th data-quarto-table-cell-role="th">mentions_count</th>
+<th data-quarto-table-cell-role="th">hashtags_count</th>
+<th data-quarto-table-cell-role="th">content_length</th>
+<th data-quarto-table-cell-role="th">has_profile_picture</th>
+<th data-quarto-table-cell-role="th">sentiment_polarity</th>
+<th data-quarto-table-cell-role="th">toxicity_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1878630970745900800</td>
+<td>https://x.com/Pableins15/status/18786309707459...</td>
+<td>@DanielNoboaOk @DiegoBorjaPC Lávate el hocico ...</td>
+<td>True</td>
+<td>DanielNoboaOk</td>
+<td>2025-01-13 02:31:00</td>
+<td>176948611</td>
+<td>Pablo Balarezo</td>
+<td>Pableins15</td>
+<td>False</td>
+<td>...</td>
+<td>1878539079249547520</td>
+<td>2025-01-12 20:26:32</td>
+<td>364.466667</td>
+<td>5261</td>
+<td>2</td>
+<td>0</td>
+<td>309</td>
+<td>False</td>
+<td>0.0</td>
+<td>0.543256</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1904041877503984128</td>
+<td>https://x.com/solma1201/status/190404187750398...</td>
+<td>@DanielNoboaOk De esa arrastrada no te levanta...</td>
+<td>True</td>
+<td>DanielNoboaOk</td>
+<td>2025-03-24 05:25:00</td>
+<td>1368663286582030336</td>
+<td>Solma1201</td>
+<td>solma1201</td>
+<td>False</td>
+<td>...</td>
+<td>1904003201143115776</td>
+<td>2025-03-24 02:51:52</td>
+<td>153.133333</td>
+<td>1399</td>
+<td>1</td>
+<td>0</td>
+<td>70</td>
+<td>True</td>
+<td>0.0</td>
+<td>0.426917</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1877463444649046016</td>
+<td>https://x.com/Mediterran67794/status/187746344...</td>
+<td>@LuisaGonzalezEc @RC5Oficial Protegiendo a los...</td>
+<td>True</td>
+<td>LuisaGonzalezEc</td>
+<td>2025-01-09 21:12:00</td>
+<td>1851005619106451712</td>
+<td>Médico Escritor Filósofo Hermeneútico</td>
+<td>Mediterran67794</td>
+<td>False</td>
+<td>...</td>
+<td>1877158437236228352</td>
+<td>2025-01-09 01:00:22</td>
+<td>1211.633333</td>
+<td>68</td>
+<td>2</td>
+<td>0</td>
+<td>122</td>
+<td>True</td>
+<td>0.0</td>
+<td>0.555970</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1881356046108885248</td>
+<td>https://x.com/ardededa/status/1881356046108885494</td>
+<td>@DanielNoboaOk #NoboaPresidente. Todo 7!</td>
+<td>True</td>
+<td>DanielNoboaOk</td>
+<td>2025-01-20 15:00:00</td>
+<td>315799544</td>
+<td>Denise</td>
+<td>ardededa</td>
+<td>False</td>
+<td>...</td>
+<td>1881165128185560832</td>
+<td>2025-01-20 02:21:31</td>
+<td>758.483333</td>
+<td>4955</td>
+<td>1</td>
+<td>0</td>
+<td>41</td>
+<td>True</td>
+<td>0.0</td>
+<td>0.046615</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1888331962063978752</td>
+<td>https://x.com/LMarquinezm/status/1888331962063...</td>
+<td>@slider1908 @LuisaGonzalezEc @DianaAtamaint @c...</td>
+<td>True</td>
+<td>slider1908</td>
+<td>2025-02-08 20:59:00</td>
+<td>1551883554</td>
+<td>Luis Marquínez</td>
+<td>LMarquinezm</td>
+<td>False</td>
+<td>...</td>
+<td>1888256000085397504</td>
+<td>2025-02-08 14:59:07</td>
+<td>359.883333</td>
+<td>4208</td>
+<td>5</td>
+<td>0</td>
+<td>101</td>
+<td>True</td>
+<td>0.0</td>
+<td>0.846027</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 27 columns</p>
+</div>
+</div>
+</div>
+</section>
+<section id="limpieza-de-caracteristicas-que-no-aportan" class="level1">
+<h1>2. Limpieza de caracteristicas que no aportan</h1>
+<div id="0eb48c55" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantener solo las columnas necesarias</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.drop([<span class="st">"tweetId"</span>, <span class="st">"authorId"</span>, <span class="st">"authorProfilePic"</span>, <span class="st">"conversationId"</span>, <span class="st">"inReplyToId"</span>, <span class="st">"sentiment_polarity"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="da327c3d" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Dataset -&gt;"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.head())</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Información general -&gt;"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.info())</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Tipos de variables -&gt;"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.dtypes)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>num_vars <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>np.number).columns.tolist()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Variables numéricas: </span><span class="sc">{</span>num_vars<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>cat_vars <span class="op">=</span> df.select_dtypes(include<span class="op">=</span><span class="st">'object'</span>).columns.tolist()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variables categóricas: </span><span class="sc">{</span>cat_vars<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>text_vars <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> cat_vars <span class="cf">if</span> col <span class="kw">not</span> <span class="kw">in</span> [<span class="st">'usuario'</span>, <span class="st">'sentimiento'</span>]]  </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Variables de texto: </span><span class="sc">{</span>text_vars<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Dataset -&gt;
+                                            tweetUrl  \
+0  https://x.com/Pableins15/status/18786309707459...   
+1  https://x.com/solma1201/status/190404187750398...   
+2  https://x.com/Mediterran67794/status/187746344...   
+3  https://x.com/ardededa/status/1881356046108885494   
+4  https://x.com/LMarquinezm/status/1888331962063...   
+
+                                             content  isReply  \
+0  @DanielNoboaOk @DiegoBorjaPC Lávate el hocico ...     True   
+1  @DanielNoboaOk De esa arrastrada no te levanta...     True   
+2  @LuisaGonzalezEc @RC5Oficial Protegiendo a los...     True   
+3          @DanielNoboaOk #NoboaPresidente.  Todo 7!     True   
+4  @slider1908 @LuisaGonzalezEc @DianaAtamaint @c...     True   
+
+           replyTo            createdAt  \
+0    DanielNoboaOk  2025-01-13 02:31:00   
+1    DanielNoboaOk  2025-03-24 05:25:00   
+2  LuisaGonzalezEc  2025-01-09 21:12:00   
+3    DanielNoboaOk  2025-01-20 15:00:00   
+4       slider1908  2025-02-08 20:59:00   
+
+                              authorName   authorUsername  authorVerified  \
+0                         Pablo Balarezo       Pableins15           False   
+1                              Solma1201        solma1201           False   
+2  Médico Escritor Filósofo Hermeneútico  Mediterran67794           False   
+3                                 Denise         ardededa           False   
+4                         Luis Marquínez      LMarquinezm           False   
+
+   authorFollowers       authorJoinDate  ...         hashtags  \
+0               18  2010-08-10 21:35:00  ...              NaN   
+1               58  2021-03-07 20:42:00  ...              NaN   
+2               75  2024-10-28 20:59:00  ...              NaN   
+3               85  2011-06-12 13:26:00  ...  NoboaPresidente   
+4               43  2013-06-28 01:23:00  ...              NaN   
+
+                                            mentions                 Date  \
+0                      @DanielNoboaOk, @DiegoBorjaPC  2025-01-12 20:26:32   
+1                                     @DanielNoboaOk  2025-03-24 02:51:52   
+2                      @LuisaGonzalezEc, @RC5Oficial  2025-01-09 01:00:22   
+3                                     @DanielNoboaOk  2025-01-20 02:21:31   
+4  @slider1908, @LuisaGonzalezEc, @DianaAtamaint,...  2025-02-08 14:59:07   
+
+  time_response  account_age_days  mentions_count  hashtags_count  \
+0    364.466667              5261               2               0   
+1    153.133333              1399               1               0   
+2   1211.633333                68               2               0   
+3    758.483333              4955               1               0   
+4    359.883333              4208               5               0   
+
+   content_length  has_profile_picture  toxicity_score  
+0             309                False        0.543256  
+1              70                 True        0.426917  
+2             122                 True        0.555970  
+3              41                 True        0.046615  
+4             101                 True        0.846027  
+
+[5 rows x 21 columns]
+
+Información general -&gt;
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 1500 entries, 0 to 1499
+Data columns (total 21 columns):
+ #   Column               Non-Null Count  Dtype  
+---  ------               --------------  -----  
+ 0   tweetUrl             1500 non-null   object 
+ 1   content              1500 non-null   object 
+ 2   isReply              1500 non-null   bool   
+ 3   replyTo              1490 non-null   object 
+ 4   createdAt            1500 non-null   object 
+ 5   authorName           1500 non-null   object 
+ 6   authorUsername       1500 non-null   object 
+ 7   authorVerified       1500 non-null   bool   
+ 8   authorFollowers      1500 non-null   int64  
+ 9   authorJoinDate       1500 non-null   object 
+ 10  source               1500 non-null   object 
+ 11  hashtags             121 non-null    object 
+ 12  mentions             1499 non-null   object 
+ 13  Date                 1500 non-null   object 
+ 14  time_response        1500 non-null   float64
+ 15  account_age_days     1500 non-null   int64  
+ 16  mentions_count       1500 non-null   int64  
+ 17  hashtags_count       1500 non-null   int64  
+ 18  content_length       1500 non-null   int64  
+ 19  has_profile_picture  1500 non-null   bool   
+ 20  toxicity_score       1347 non-null   float64
+dtypes: bool(3), float64(2), int64(5), object(11)
+memory usage: 215.5+ KB
+None
+
+Tipos de variables -&gt;
+tweetUrl                object
+content                 object
+isReply                   bool
+replyTo                 object
+createdAt               object
+authorName              object
+authorUsername          object
+authorVerified            bool
+authorFollowers          int64
+authorJoinDate          object
+source                  object
+hashtags                object
+mentions                object
+Date                    object
+time_response          float64
+account_age_days         int64
+mentions_count           int64
+hashtags_count           int64
+content_length           int64
+has_profile_picture       bool
+toxicity_score         float64
+dtype: object
+
+Variables numéricas: ['authorFollowers', 'time_response', 'account_age_days', 'mentions_count', 'hashtags_count', 'content_length', 'toxicity_score']
+Variables categóricas: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName', 'authorUsername', 'authorJoinDate', 'source', 'hashtags', 'mentions', 'Date']
+Variables de texto: ['tweetUrl', 'content', 'replyTo', 'createdAt', 'authorName', 'authorUsername', 'authorJoinDate', 'source', 'hashtags', 'mentions', 'Date']</code></pre>
+</div>
+</div>
+</section>
+<section id="estadísticas-descriptivas" class="level1">
+<h1>3.Estadísticas descriptivas</h1>
+<div id="9e5b6e7c" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Estadísticas numéricas ==="</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[num_vars].describe())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== Estadísticas numéricas ===
+       authorFollowers  time_response  account_age_days  mentions_count  \
+count     1.500000e+03    1500.000000       1500.000000     1500.000000   
+mean      3.625721e+03    1170.037578       2271.134000        1.723333   
+std       1.184447e+05    3273.929808       1984.156805        0.946248   
+min       0.000000e+00       0.133333        -90.000000        0.000000   
+25%       7.000000e+00     136.300000        455.750000        1.000000   
+50%       4.300000e+01     515.625000       1538.000000        2.000000   
+75%       1.992500e+02    1265.716667       4420.750000        2.000000   
+max       4.577730e+06   63569.000000       6506.000000       10.000000   
+
+       hashtags_count  content_length  toxicity_score  
+count          1500.0     1500.000000     1347.000000  
+mean              0.0      116.528000        0.253879  
+std               0.0       77.493712        0.243942  
+min               0.0       17.000000        0.001940  
+25%               0.0       57.000000        0.028444  
+50%               0.0       96.000000        0.188392  
+75%               0.0      150.000000        0.426917  
+max               0.0      684.000000        0.939145  </code></pre>
+</div>
+</div>
+</section>
+<section id="distribución-de-la-variable-toxicity_score" class="level1">
+<h1>4. Distribución de la variable toxicity_score</h1>
+<div id="a0459374" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(df[<span class="st">'toxicity_score'</span>], bins<span class="op">=</span><span class="dv">40</span>, kde<span class="op">=</span><span class="va">True</span>, color<span class="op">=</span><span class="st">'grey'</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribución de toxicity_score"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Toxicity Score"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frecuencia"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot para ver outliers</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span>df[<span class="st">'toxicity_score'</span>], color<span class="op">=</span><span class="st">'orange'</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Boxplot de toxicity_score"</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-7-output-1.png" width="593" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-7-output-2.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="detección-de-valores-nulos-duplicados-o-atípicos" class="level1">
+<h1>5. Detección de valores nulos, duplicados o atípicos</h1>
+<div id="5de2168a" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Valores nulos por columna ==="</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isnull().<span class="bu">sum</span>())</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Filas duplicadas ==="</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.duplicated().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== Valores nulos por columna ===
+tweetUrl                  0
+content                   0
+isReply                   0
+replyTo                  10
+createdAt                 0
+authorName                0
+authorUsername            0
+authorVerified            0
+authorFollowers           0
+authorJoinDate            0
+source                    0
+hashtags               1379
+mentions                  1
+Date                      0
+time_response             0
+account_age_days          0
+mentions_count            0
+hashtags_count            0
+content_length            0
+has_profile_picture       0
+toxicity_score          153
+dtype: int64
+
+=== Filas duplicadas ===
+0</code></pre>
+</div>
+</div>
+<div id="b820c3d9" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar filas nulas en columnas críticas</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">'replyTo'</span>, <span class="st">'hashtags'</span>, <span class="st">'toxicity_score'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="347fbaaf" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Valores nulos por columna ==="</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.isnull().<span class="bu">sum</span>())</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">=== Filas duplicadas ==="</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.duplicated().<span class="bu">sum</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== Valores nulos por columna ===
+tweetUrl               0
+content                0
+isReply                0
+replyTo                0
+createdAt              0
+authorName             0
+authorUsername         0
+authorVerified         0
+authorFollowers        0
+authorJoinDate         0
+source                 0
+hashtags               0
+mentions               0
+Date                   0
+time_response          0
+account_age_days       0
+mentions_count         0
+hashtags_count         0
+content_length         0
+has_profile_picture    0
+toxicity_score         0
+dtype: int64
+
+=== Filas duplicadas ===
+0</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizaciones-apropiadas-de-acuerdo-al-tipo-de-dato" class="level1">
+<h1>visualizaciones apropiadas de acuerdo al tipo de dato</h1>
+<div id="479edce6" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogramas y boxplots para variables numéricas</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> num_vars:</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    sns.histplot(df[col], bins<span class="op">=</span><span class="dv">20</span>, kde<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Histograma de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    sns.boxplot(x<span class="op">=</span>df[col])</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Boxplot de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-1.png" width="593" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-2.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-3.png" width="593" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-4.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-5.png" width="601" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-6.png" width="561" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-7.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-8.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-9.png" width="593" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-10.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-11.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-12.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-13.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-11-output-14.png" width="545" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="67ee3689" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de barras para variables categóricas</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> cat_vars:</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    sns.countplot(y<span class="op">=</span>df[col], order<span class="op">=</span>df[col].value_counts().index)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Distribución de </span><span class="sc">{</span>col<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-1.png" width="1003" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127466 (\N{REGIONAL INDICATOR SYMBOL LETTER E}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127464 (\N{REGIONAL INDICATOR SYMBOL LETTER C}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128170 (\N{FLEXED BICEPS}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129327 (\N{SHOCKED FACE WITH EXPLODING HEAD}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 9994 (\N{RAISED FIST}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129317 (\N{LYING FACE}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128153 (\N{BLUE HEART}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128591 (\N{PERSON WITH FOLDED HANDS}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127995 (\N{EMOJI MODIFIER FITZPATRICK TYPE-1-2}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129325 (\N{SMILING FACE WITH SMILING EYES AND HAND COVERING MOUTH}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127997 (\N{EMOJI MODIFIER FITZPATRICK TYPE-4}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129309 (\N{HANDSHAKE}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128680 (\N{POLICE CARS REVOLVING LIGHT}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128227 (\N{CHEERING MEGAPHONE}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 128071 (\N{WHITE DOWN POINTING BACKHAND INDEX}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-3.png" width="2840" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-4.png" width="679" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-5.png" width="709" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127466 (\N{REGIONAL INDICATOR SYMBOL LETTER E}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127464 (\N{REGIONAL INDICATOR SYMBOL LETTER C}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127477 (\N{REGIONAL INDICATOR SYMBOL LETTER P}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127480 (\N{REGIONAL INDICATOR SYMBOL LETTER S}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 127465 (\N{REGIONAL INDICATOR SYMBOL LETTER D}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 129415 (\N{BAT}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120189 (\N{MATHEMATICAL BOLD FRAKTUR CAPITAL R}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120212 (\N{MATHEMATICAL BOLD FRAKTUR SMALL O}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120200 (\N{MATHEMATICAL BOLD FRAKTUR SMALL C}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120173 (\N{MATHEMATICAL BOLD FRAKTUR CAPITAL B}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120218 (\N{MATHEMATICAL BOLD FRAKTUR SMALL U}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120215 (\N{MATHEMATICAL BOLD FRAKTUR SMALL R}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120204 (\N{MATHEMATICAL BOLD FRAKTUR SMALL G}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)
+D:\Maestria_AI\Machine_Learning_lec3\2025SEM02_YT_ML\.venv\Lib\site-packages\IPython\core\pylabtools.py:170: UserWarning: Glyph 120216 (\N{MATHEMATICAL BOLD FRAKTUR SMALL S}) missing from font(s) DejaVu Sans.
+  fig.canvas.print_figure(bytes_io, **kw)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-7.png" width="815" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-8.png" width="699" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-9.png" width="709" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-10.png" width="685" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-11.png" width="1297" height="450" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-12.png" width="1683" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TOXICITY_files/figure-html/cell-12-output-13.png" width="709" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="6a3f5b81" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nube de palabras para variables de texto (ej: tweets)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#text_column = 'createdAt'  # ajustar según tu dataset</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#all_text = ' '.join(df[text_column].dropna().astype(str))</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#wordcloud = WordCloud(width=800, height=400, background_color='white',</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                      stopwords=STOPWORDS, max_words=100).generate(all_text)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.figure(figsize=(15,7))</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.imshow(wordcloud, interpolation='bilinear')</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.axis('off')</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.title("Nube de palabras del texto de tweets")</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#plt.show()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="37853725" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráficos de dispersión si aplica</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: toxicity_score vs número de comentarios</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">'comentarios'</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(x<span class="op">=</span><span class="st">'comentarios'</span>, y<span class="op">=</span><span class="st">'toxicity_score'</span>, data<span class="op">=</span>df)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Dispersión: Comentarios vs Toxicity Score"</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Número de comentarios"</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Toxicity Score"</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✅ EDA completo."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>✅ EDA completo.</code></pre>
+</div>
+</div>
+<section id="procesamiento-y-codificación" class="level3">
+<h3 class="anchored" data-anchor-id="procesamiento-y-codificación">PROCESAMIENTO Y CODIFICACIÓN</h3>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

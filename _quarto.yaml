@@ -26,9 +26,9 @@ website:
           - tfidf.qmd
           - text_classification.qmd
       - section: "Sentimiento Analysis"
-        href: prediccion_animo_usuarios.qmd
+        href: TOXICITY.qmd
         contents:
-          - prediccion_animo_usuarios.qmd
+          - TOXICITY.qmd
 
 format:
   html:
