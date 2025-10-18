@@ -19,6 +19,7 @@ from sklearn.metrics import (
     classification_report, accuracy_score, precision_score, recall_score, f1_score,
     roc_auc_score, confusion_matrix, ConfusionMatrixDisplay, roc_curve, RocCurveDisplay,
 )
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.utils import resample
 from sklearn.impute import SimpleImputer
@@ -26,6 +27,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler, label_binarize
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.decomposition import TruncatedSVD
 from imblearn.over_sampling import SMOTE
 import re, string, nltk
@@ -52,7 +54,7 @@ df.head()
 ### 2. Limpieza de caracteristicas que no aportan
 ```{python}
 # Mantener solo las columnas necesarias
-df = df.drop(["tweetId", "authorId", "authorProfilePic", "conversationId", "inReplyToId", "sentiment_polarity", "hashtags_count"], axis=1)
+df = df.drop(["tweetId", "authorId", "hashtags", "authorProfilePic", "conversationId", "inReplyToId", "sentiment_polarity", "hashtags_count"], axis=1)
 ```
 
 ### 3. Tipo y cantidad de variables (numéricas, categóricas, texto).
@@ -78,48 +80,12 @@ print("\nEstadísticas numéricas")
 print(df[num_vars].describe())
 ```
 
-### 5. Distribución de la variable toxicity_score antes de remover nulos
-```{python}
-
-plt.figure()
-sns.histplot(df['toxicity_score'], bins=40, kde=True, color='grey')
-plt.title("Distribución de toxicity_score")
-plt.xlabel("Toxicity Score")
-plt.ylabel("Frecuencia")
-plt.show()
-
-# Boxplot para ver outliers
-plt.figure()
-sns.boxplot(x=df['toxicity_score'], color='orange')
-plt.title("Boxplot de toxicity_score")
-plt.show()
-```
-
-### 6. Detección de valores nulos, duplicados o atípicos
-```{python}
-print("\nValores nulos por columna")
-print(df.isnull().sum())
-
-print("\nFilas duplicadas")
-print(df.duplicated().sum())
-```
-```{python}
-# Eliminar filas nulas en columnas críticas
-df = df.dropna(subset=['replyTo', 'hashtags', 'toxicity_score'])
-
-print("\nValores nulos por columna")
-print(df.isnull().sum())
-
-print("\nFilas duplicadas")
-print(df.duplicated().sum())
-```
-
-### 7. Visualizaciones apropiadas de acuerdo al tipo de dato
+### 5. Visualizaciones apropiadas de acuerdo al tipo de dato
 ```{python}
 # Histogramas y boxplots para variables numéricas
 for col in num_vars:
     plt.figure()
-    sns.histplot(df[col], bins=20, kde=True)
+    sns.histplot(df[col], bins=40, kde=True)
     plt.title(f"Histograma de {col}")
     plt.show()
     
@@ -129,6 +95,7 @@ for col in num_vars:
     plt.show()
 ```
 
+### Correlaciones entre variables numericas
 ```{python}
 # Seleccionar variable dependiente
 y = df['toxicity_score']
@@ -157,7 +124,12 @@ for col in x:
     )
     
     # Calcular coeficiente de correlación de Pearson
-    r, p = pearsonr(df[col].dropna(), df['toxicity_score'].dropna())
+    # Align the two series pairwise and drop any rows with NaNs in either column
+    pair_df = df[[col, 'toxicity_score']].dropna()
+    if pair_df.shape[0] >= 2:
+        r, p = pearsonr(pair_df[col], pair_df['toxicity_score'])
+    else:
+        r, p = (np.nan, np.nan)
     
     plt.title(f"{col} vs Toxicity Score\nr = {r:.2f}, p = {p:.3e}")
     plt.xlabel(col)
@@ -187,8 +159,31 @@ def limpiar_texto(text):
 df['texto_limpio'] = df['content'].apply(limpiar_texto)
 ```
 
+### 2. Detección de valores nulos, duplicados o atípicos
 ```{python}
-# Identificar tipos de variables
+print("\nValores nulos por columna")
+print(df.isnull().sum())
+
+print("\nFilas duplicadas")
+print(df.duplicated().sum())
+```
+
+```{python}
+# Eliminar filas nulas en columnas críticas
+df = df.dropna(subset=['replyTo', 'toxicity_score', 'texto_limpio'])
+
+print("\nValores nulos por columna")
+print(df.isnull().sum())
+
+print("\nFilas duplicadas")
+print(df.duplicated().sum())
+```
+
+```{python}
+df.info()
+```
+### 3. Identificar tipos de variables
+```{python}
 target = 'toxicity_score'
 text_col = 'texto_limpio'
 cat_cols = df.select_dtypes(include='object').drop(columns=['texto', text_col], errors='ignore').columns.tolist()
@@ -199,7 +194,7 @@ print(f"Variables numéricas: {num_cols}")
 print(f"Variable de texto: {text_col}")
 ```
 
-### 2. Definir transformadores TF-IDF por tipo de variable
+### 4. Definir transformadores TF-IDF por tipo de variable
 #### preparacion de columnas de texto para el ML
 ```{python}
 text_transformer = Pipeline(steps=[
@@ -220,7 +215,7 @@ num_transformer = Pipeline(steps=[
 ])
 ```
 
-### Combinar transformadores para la nueva database en un ColumnTransformer para modelacións
+#### Combinar transformadores para las variables en un ColumnTransformer para modelacións
 ```{python}
 preprocessor = ColumnTransformer(transformers=[
     ('text', text_transformer, text_col),
@@ -228,19 +223,20 @@ preprocessor = ColumnTransformer(transformers=[
     ('num', num_transformer, num_cols)
 ])
 
-# Crear pipeline completo (solo preprocesamiento)
+# Crear pipeline completo (solo para el preprocesamiento)
 preprocessing_pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor)
 ])
 ```
 
-
+#### Aplicar pipeline de preprocesamiento
 ```{python}
-# Aplicar pipeline de preprocesamiento
 print("\nEjecutando preprocesamiento...")
-# --- Avoid data leakage: split *before* fitting vectorizers / scalers
-# Create binary target for classification (threshold can be adjusted)
+# Para evitar la fuga de datos: dividimos el dataset *antes* de ajustar vectorizers / scalers
+# Crear objetivo binario para la clasificación (el umbral depende de la distribucion de los datos).
 umbral = 0.5
+# 0 = No tóxico (toxicity_score < 0.5)
+# 1 = Tóxico (toxicity_score >= 0.5) 
 df['toxicity_class'] = df['toxicity_score'].apply(lambda x: 1 if x >= umbral else 0)
 
 # Prepare feature dataframe (drop target columns)
@@ -263,44 +259,35 @@ print("Dimensiones de y_train:", getattr(y_train, 'shape', None))
 # CLASIFICACION SUPERVISADA (RF)
 ### 1. Nuevamente stadísticas de toxicity_score
 ```{python}
-print("\n=== Estadísticas de toxicity_score ===")
-print(df['toxicity_score'].describe())
-
-plt.figure()
-sns.histplot(df['toxicity_score'], bins=20, kde=True)
-plt.title("Distribución de toxicity_score")
-plt.xlabel("Toxicity Score")
-plt.ylabel("Frecuencia")
-plt.show()
+#print("\n=== Estadísticas de toxicity_score ===")
+#print(df['toxicity_score'].describe())
+#
+#plt.figure()
+#sns.histplot(df['toxicity_score'], bins=20, kde=True)
+#plt.title("Distribución de toxicity_score")
+#plt.xlabel("Toxicity Score")
+#plt.ylabel("Frecuencia")
+#plt.show()
 ```
 
 ### 2. Definición umbrales
-Definir variable categórica
-Ejemplo simple: binaria
-0 = No tóxico (toxicity_score < 0.5)
-1 = Tóxico (toxicity_score >= 0.5)
-Se puede ajustar a multiclase si se desea
+# Definir variable categórica
+# Ejemplo simple: binaria
+# 
+# Se puede ajustar a multiclase si se desea
 ```{python}
-# The binary target (`toxicity_class`) was created earlier during preprocessing.
-# We already split the raw dataframe and applied preprocessing to obtain
-# `X_train`, `X_test`, `y_train`, `y_test`.
-
+## Las variabl target (`toxicity_class`) fue creada anteriormente
+## Ya se dicidio SPLIT el dataframe `X_train`, `X_test`, `y_train`, `y_test`.
 print("\nDistribución de clases:")
 print(df['toxicity_class'].value_counts())
-
-# At this point we will use the precomputed `X_train`, `X_test`, `y_train`, `y_test`
-# produced in the preprocessing step above. Avoid re-splitting or reusing
-# variables that are no longer defined (e.g., `X`).
+# Usamos estas variales para balancear la data
 ```
 
-### 3. División del dataset en entrenamiento y prueba
-```{python}
-# The dataset has already been split earlier (before preprocessing) into
-# `X_train`, `X_test`, `y_train`, `y_test`. Do not re-split here to avoid
-# overwriting those arrays or causing NameError for `X_raw`/`y_raw`.
-```
+### 3. Balanceo de clases con SMOTE
+The dataset has already been split earlier (before preprocessing) into
+`X_train`, `X_test`, `y_train`, `y_test`. Do not re-split here to avoid
+overwriting those arrays or causing NameError for `X_raw`/`y_raw`.
 
-### 4. Balanceo de clases con SMOTE
 ```{python}
 smote = SMOTE(random_state=42)
 X_train_bal, y_train_bal = smote.fit_resample(X_train, y_train)
@@ -309,19 +296,19 @@ print("\nDistribución después de SMOTE:")
 print(pd.Series(y_train_bal).value_counts())
 ```
 
-### 5. Entrenamiento del modelo Random Forest
+### 4. Entrenamiento del modelo Random Forest
 ```{python}
 rf_clf = RandomForestClassifier(n_estimators=200, random_state=42)
 rf_clf.fit(X_train_bal, y_train_bal)
 ```
 
-### 6. Predicción
+### 5. Predicción
 ```{python}
 y_pred = rf_clf.predict(X_test)
 y_proba = rf_clf.predict_proba(X_test)[:,1]  # probabilidades para ROC
 ```
 
-### 7. Evaluación del modelo
+### 6. Evaluación del modelo
 ```{python}
 acc = accuracy_score(y_test, y_pred)
 prec = precision_score(y_test, y_pred)
@@ -346,5 +333,77 @@ plt.show()
 ```{python}
 RocCurveDisplay.from_estimator(rf_clf, X_test, y_test)
 plt.title("Curva ROC - Random Forest")
+plt.show()
+```
+
+# PROBLEMA DE REGRESIÓN
+
+```{python}
+# 2️⃣ Dividir datos en entrenamiento y prueba (80%-20%)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+```
+
+# 3️⃣ Entrenamiento del modelo de regresión
+
+```{python}
+rf_reg = RandomForestRegressor(n_estimators=200, random_state=42)
+rf_reg.fit(X_train, y_train)
+```
+
+
+# 4️⃣ Predicciones
+
+```{python}
+y_pred = rf_reg.predict(X_test)
+```
+
+
+# 5️⃣ Evaluación del modelo
+
+```{python}
+mae = mean_absolute_error(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+r2 = r2_score(y_test, y_pred)
+
+print("=== Evaluación de Regresión ===")
+print(f"MAE: {mae:.4f}")
+print(f"RMSE: {rmse:.4f}")
+print(f"R²: {r2:.4f}")
+```
+
+
+# 6️⃣ Visualización de resultados
+
+```{python}
+# Dispersión real vs predicho
+plt.figure(figsize=(8,6))
+plt.scatter(y_test, y_pred, alpha=0.6, color='teal')
+plt.plot([0,1], [0,1], 'r--')
+plt.xlabel("Valores reales de Toxicity Score")
+plt.ylabel("Valores predichos")
+plt.title("Dispersión: Valores reales vs predichos")
+plt.show()
+```
+
+```{python}
+# Errores residuales
+residuals = y_test - y_pred
+plt.figure(figsize=(8,6))
+plt.scatter(y_pred, residuals, alpha=0.6, color='purple')
+plt.axhline(y=0, color='r', linestyle='--')
+plt.xlabel("Valores predichos")
+plt.ylabel("Errores residuales")
+plt.title("Errores residuales vs Valores predichos")
+plt.show()
+
+```
+
+```{python}
+# Histograma de errores residuales
+plt.figure(figsize=(8,6))
+plt.hist(residuals, bins=30, color='orange', edgecolor='k', alpha=0.7)
+plt.xlabel("Error")
+plt.ylabel("Frecuencia")
+plt.title("Distribución de errores residuales")
 plt.show()
 ```
